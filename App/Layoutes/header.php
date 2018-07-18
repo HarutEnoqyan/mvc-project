@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>MVC-PROJECT</title>
-		<link rel="stylesheet" type="text/css" href="css/main.css">
-		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	</head>
+        <title>MVC-PROJECT</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    </head>
 	<body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">MVC</a>
+        <a class="navbar-brand" href="/">MVC</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -28,8 +28,8 @@
                 </li>
             </ul>
             <div class="form-inline my-2 my-lg-0">
-                <a class="nav-link" href="#">Login</a>
-                <a class="nav-link" href="#">Sign in</a>
+                <a class="nav-link" href="<?= route('main/login')?>">Login</a>
+                <a class="nav-link" href="<?= route('main/register')?>">Register</a>
             </div >
         </div>
     </nav>

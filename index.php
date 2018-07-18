@@ -2,9 +2,19 @@
 require_once 'App/helpers.php';
 require_once 'autoload.php';
 
-$route = new Core\Router();
-$config = new Core\Congif();
+$pdh = null;
+
 $conn = new \Core\Connection();
+$config = new Core\Congif();
+$route = new Core\Router();
+//$migrate = new \Core\Migration();
 $config->init();
-$route->init();
 $conn->init();
+$route->init();
+//$migrate-
+
+//dd($pdh);
+
+
+
+

@@ -1,5 +1,7 @@
 <?php
 
+namespace Core;
+
 class Router {
     public function init()
     {
@@ -13,11 +15,11 @@ class Router {
             $controller = ucfirst($controllerAction[0]);
             $action = ucfirst($controllerAction[1]);
 
-            $className = "{$controller}Controller";
+            $className = "\\App\\Controllers\\{$controller}Controller";
             $c = new $className();
             $methodName = "action{$action}";
             if (!method_exists($c, $methodName)) {
-                show_error("Unknown controller action $methodName");
+                echo "Unknown controller action $methodName"; die();
             }
             $c->$methodName();
         } else {

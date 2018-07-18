@@ -1,0 +1,31 @@
+CREATE TABLE users (
+  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  first_name VARCHAR(255) NOT NULL ,
+  last_name VARCHAR(255) NOT NULL ,
+  date_of_birth DATE,
+  email VARCHAR(255) NOT NULL UNIQUE ,
+  created_at DATETIME,
+  updated_at DATETIME
+);
+
+CREATE TABLE posts (
+  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  user_id INT(11) NOT NULL ,
+  title VARCHAR(255) NOT NULL ,
+  content VARCHAR(255) NOT NULL ,
+  created_at DATETIME,
+  updated_at DATETIME,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE NO ACTION
+);
+
+CREATE TABLE comments (
+  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  post_id INT(11) NOT NULL ,
+  user_id INT(11) NOT NULL ,
+  content VARCHAR(255) NOT NULL ,
+  created_at DATETIME,
+  updated_at DATETIME,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE NO ACTION ,
+  FOREIGN KEY (post_id) REFERENCES posts(id) ON UPDATE CASCADE ON DELETE NO ACTION
+
+);
