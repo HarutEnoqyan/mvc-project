@@ -4,3 +4,7 @@
 {
  var_dump($arg);die();
 }
+
+function view() {
+
+}
