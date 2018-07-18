@@ -13,7 +13,7 @@ class Router {
             $controller = ucfirst($controllerAction[0]);
             $action = ucfirst($controllerAction[1]);
 
-            $className = "\\App\\Controllers\\{$controller}Controller";
+            $className = "{$controller}Controller";
             $c = new $className();
             $methodName = "action{$action}";
             if (!method_exists($c, $methodName)) {
