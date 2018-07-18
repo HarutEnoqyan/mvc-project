@@ -4,6 +4,7 @@ CREATE TABLE users (
   last_name VARCHAR(255) NOT NULL ,
   date_of_birth DATE,
   email VARCHAR(255) NOT NULL UNIQUE ,
+  password VARCHAR(255) NOT NULL ,
   created_at DATETIME,
   updated_at DATETIME
 );
@@ -29,3 +30,6 @@ CREATE TABLE comments (
   FOREIGN KEY (post_id) REFERENCES posts(id) ON UPDATE CASCADE ON DELETE NO ACTION
 
 );
+
+INSERT INTO users(first_name, last_name, date_of_birth, email, password, created_at, updated_at)
+    VALUES ('Harut','Enoqyan','22.08.91','harut.enoqyan87@gmail.com','secret' , date("Y-m-d H:i:s") , date("Y-m-d H:i:s"));

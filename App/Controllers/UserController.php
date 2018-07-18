@@ -1,15 +1,21 @@
 <?php
 
 namespace App\Controllers;
+use Models\User;
 
 
 class UserController
 {
     public function actionIndex(){
-        echo "user/index";
+        dd(name);
+        view('//user//welcome');
     }
 
     public  function actionCreate() {
-        var_dump($_POST);
+        $user = new User();
+        $user->create();
+        $userName = $_POST['first_name'];
+//        dd($userName);
+//        header("Location:".route('user/index').");
     }
 }
