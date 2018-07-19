@@ -7,7 +7,7 @@ use Models\User;
 class UserController
 {
     public function actionIndex(){
-        dd(name);
+        // dd($name);
         view('//user//welcome');
     }
 
@@ -15,7 +15,6 @@ class UserController
         $user = new User();
         $user->create();
         $userName = $_POST['first_name'];
-//        dd($userName);
-//        header("Location:".route('user/index').");
+        header("Location: ".route('user/index' ,['name' => $userName])." ");
     }
 }

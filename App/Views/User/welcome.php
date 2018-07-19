@@ -1,2 +1,2 @@
-<h1>Wellcome <?= $params['name']?></h1>
+<h1>Wellcome <?= $_GET['name'] ?></h1>
 <?php
