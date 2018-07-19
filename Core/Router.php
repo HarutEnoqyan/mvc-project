@@ -9,7 +9,6 @@ class Router {
         if (!empty($_GET['route'])) {
             $route = $_GET['route'];
         }
-
         $controllerAction = explode('/', $route);
         if (count($controllerAction) === 2) {
             $controller = ucfirst($controllerAction[0]);

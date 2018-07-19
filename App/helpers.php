@@ -21,7 +21,6 @@ function view($viewName , $params = []) {
 function query($sql, $params = [])
 {
     global $pdh;
-//    dd($pdh);
     $statement = $pdh->prepare($sql);
     if (!$statement) {
         show_error($pdh->errorInfo()[2]);
