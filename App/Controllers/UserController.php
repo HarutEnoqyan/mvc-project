@@ -15,16 +15,31 @@ class UserController
         $user = new User();
         $user->create();
         $userName = $_POST['first_name'];
-        header("Location: ".route('user/index' ,['name' => $userName])." ");
+        header("Location: ".route('user/check' ,['name' => $userName])." ");
     }
 
     public function actionCheck() {
+
         $user = new User();
-        if ($user->login()){
-            $name = $user->login()[0]->getAttributes()['first_name'];
-            header("Location: ".route('user/index' ,['name' => $name])." ");
+        if (  $user->login()  ){
+            $token = md5(rand() );
+            $userId = $user->login()->getAttributes()['id'];
+            session_start();
+            $_SESSION['token']=$token;
+            $_SESSION['id']=$userId;
+//            dd($_SESSION);
+            $user->updateToken($userId,$token);
+
+            $name = $user->login()->getAttributes()['first_name'];
+            header("Location: ".route('user/index' ,['name' => $name , 'token'=>$token])." ");
         } else {
             header("Location: ".route('main/login')." ");
         }
+    }
+
+    public function actionLogout() {
+        session_start();
+        session_destroy();
+        redirect(route('main/index'));
     }
 }

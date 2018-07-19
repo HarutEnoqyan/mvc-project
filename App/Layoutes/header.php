@@ -27,9 +27,21 @@
                     <a class="nav-link " href="#">Link4</a>
                 </li>
             </ul>
-            <div class="form-inline my-2 my-lg-0">
-                <a class="nav-link" href="<?= route('main/login')?>">Login</a>
-                <a class="nav-link" href="<?= route('main/register')?>">Register</a>
-            </div >
+
+            <?php
+            session_start();
+            if ($_SESSION && $_SESSION['token']){?>
+                <a class="nav-link" href="<?=route("user/logout")?>">Logout</a>
+
+            <?php }
+             else{
+               ?>
+                 <div class="form-inline my-2 my-lg-0">
+                     <a class="nav-link" href="<?= route('main/login')?>">Login</a>
+                     <a class="nav-link" href="<?= route('main/register')?>">Register</a>
+                 </div >
+            <?php
+            }
+            ?>
         </div>
     </nav>

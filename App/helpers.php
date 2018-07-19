@@ -34,3 +34,8 @@ function route($route, array $params = [])
     $q = http_build_query($params);
     return "/?route=$route" . ($q ? "&$q" : '');
 }
+
+function redirect($to)
+{
+    header("location: $to");
+}

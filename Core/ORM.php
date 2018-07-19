@@ -16,6 +16,8 @@ class ORM
 
     protected $offset;
 
+    protected $set;
+
     protected $attributes = [];
 
     public function getAttributes()
@@ -136,6 +138,18 @@ class ORM
         if ($this->where) {
             $sql .= " WHERE " . $this->where;
         }
+        query($sql);
+    }
+
+    public function set($value1, $value2)
+    {
+        $this->set = " SET $value1='$value2' ";
+        return $this;
+    }
+
+    public function update($table)
+    {
+        $sql = "UPDATE $table" . $this->set . "WHERE " . $this->where . ";";
         query($sql);
     }
 }
