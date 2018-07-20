@@ -3,9 +3,8 @@
 	<head>
         <title>MVC-PROJECT</title>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-<!--        <link rel="stylesheet" type="text/css" href="css/fontawesome.min.css">-->
-        <link rel="stylesheet" type="text/css" href="css/main.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
     </head>
 	<body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -17,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="<?=route('post/index')?>">Posts <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="<?=route("post/index")?>">Posts <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Link3</a>
