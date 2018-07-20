@@ -20,6 +20,10 @@ class ORM
 
     protected $join;
 
+    protected $show;
+
+    protected $table;
+
     public $attributes = [];
 
     public function getAttributes()
@@ -65,6 +69,7 @@ class ORM
             }
         }
         global $pdh;
+//        dd($sql);
         $statement = $pdh->query($query);
         return $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
     }
@@ -134,6 +139,7 @@ class ORM
         }, $this->attributes));
         $tableName = $this->getTable();
         $sql = "INSERT INTO $tableName ($fields) VALUES ($values)";
+//        dd($sql);
         query($sql);
     }
 
@@ -163,4 +169,15 @@ class ORM
         $this->join= " JOIN $to ON $with $operator $onWith ";
         return $this;
     }
+
+    public function showColumns()
+    {
+        $sql = "show columns FROM $this->table ;";
+//        dd($sql);
+        return query($sql);
+    }
+
+
+
+
 }

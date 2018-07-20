@@ -1,5 +1,5 @@
 <div class="container mt-lg-2">
-        <a href="#" class="btn btn-success btn-sm" style="margin-bottom: 5px">
+        <a href="<?=route('post/create')?>" class="btn btn-success btn-sm" style="margin-bottom: 5px">
             <i class="fas fa-plus"></i>
             Add New
         </a>
