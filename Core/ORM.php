@@ -65,11 +65,10 @@ class ORM
         if ($this->limit) {
             $query .= " LIMIT " . $this->limit;
             if ($this->offset) {
-                $offset .= " OFFSET " . $this->offset;
+                $query .= " OFFSET " . $this->offset;
             }
         }
         global $pdh;
-//        dd($sql);
         $statement = $pdh->query($query);
         return $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
     }
@@ -155,10 +154,12 @@ class ORM
 
     public function set($value1 = [], $value2= [])
     {
-        for($i = 0; $i< count($value1);$i++) {
-            $this->set .= "$value1[i] = $value2[i]";
+        $txt = '';
+        for($i = 0; $i< count($value1) ;$i++) {
+            $txt .= $value1[$i] ."=". "'".$value2[$i]."'" . ",";
         }
-        $this->set = " SET $value1='$value2' ";
+        $txt = substr($txt , 0,-1);
+        $this->set = " SET $txt ";
         return $this;
     }
 
@@ -166,7 +167,6 @@ class ORM
     {
 
         $sql = "UPDATE $this->table" . $this->set . "WHERE " . $this->where . ";";
-        dd($sql);
         query($sql);
     }
 
@@ -178,7 +178,6 @@ class ORM
     public function showColumns()
     {
         $sql = "show columns FROM $this->table ;";
-//        dd($sql);
         return query($sql);
     }
 
