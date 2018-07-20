@@ -15,15 +15,15 @@ class UserController
     public  function actionCreate() {
         $user = new User();
         $user->create();
-        $userName = $_POST['first_name'];
         $token = md5(rand() );
+        $userName = $user->login()->getAttributes()['first_name'];
         $userId = $user->login()->getAttributes()['id'];
         session_start();
         $_SESSION['token']=$token;
         $_SESSION['id']=$userId;
-//            dd($_SESSION);
+        $_SESSION['name']=$userName;
         $user->updateToken($userId,$token);
-        header("Location: ".route('user/Index' ,['name' => $userName])." ");
+        header("Location: ".route('user/Index' )." ");
     }
 
     public function actionCheck() {
@@ -32,14 +32,15 @@ class UserController
         if (  $user->login()  ){
             $token = md5(rand() );
             $userId = $user->login()->getAttributes()['id'];
+            $userName = $user->login()->getAttributes()['first_name'];
             session_start();
             $_SESSION['token']=$token;
             $_SESSION['id']=$userId;
-//            dd($_SESSION);
+            $_SESSION['name']=$userName;
             $user->updateToken($userId,$token);
 
-            $name = $user->login()->getAttributes()['first_name'];
-            header("Location: ".route('user/index' ,['name' => $name ])." ");
+
+            header("Location: ".route('user/index' )." ");
         } else {
             header("Location: ".route('main/login')." ");
         }
