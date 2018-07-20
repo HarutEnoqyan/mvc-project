@@ -3,8 +3,9 @@ namespace Core;
 class Auth {
     public static function checkIfAuth()
     {
-        session_start();
-
+        if (session_id()===''){
+            session_start();
+        }
         if($_SESSION && $_SESSION['token'] && $_SESSION['id']){
             return true;
         } else {
@@ -16,6 +17,7 @@ class Auth {
     {
         session_start();
         session_destroy();
+        session_abort();
     }
 
 
