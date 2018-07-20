@@ -85,8 +85,7 @@ class PostController {
         $posts= new Post();
         $title=$_REQUEST['title'];
         $content=$_REQUEST['content'];
-        $posts->where("id=$id")->set(['title','content'],["$title" , "$content"])->update();
-
-
+        $posts->where("id=$id")->set(['title','content','updated_at'],["$title" , "$content", date("Y-m-d H:i:s")])->update();
+        redirect(route('post/index'));
     }
 }
