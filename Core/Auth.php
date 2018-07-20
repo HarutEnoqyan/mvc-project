@@ -20,5 +20,13 @@ class Auth {
         session_abort();
     }
 
+    public static function getId()
+    {
+        if (session_id()===''){
+            session_start();
+        }
+        return $_SESSION['id'];
+    }
+
 
 }

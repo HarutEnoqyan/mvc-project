@@ -3,3 +3,10 @@
     margin: auto;
 }
 
+#inlne-form {
+    display: inline-block;
+}
+
+#inlne-form > button {
+    padding: 0;
+}

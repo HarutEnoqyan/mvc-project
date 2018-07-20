@@ -153,15 +153,20 @@ class ORM
         query($sql);
     }
 
-    public function set($value1, $value2)
+    public function set($value1 = [], $value2= [])
     {
+        for($i = 0; $i< count($value1);$i++) {
+            $this->set .= "$value1[i] = $value2[i]";
+        }
         $this->set = " SET $value1='$value2' ";
         return $this;
     }
 
-    public function update($table)
+    public function update()
     {
-        $sql = "UPDATE $table" . $this->set . "WHERE " . $this->where . ";";
+
+        $sql = "UPDATE $this->table" . $this->set . "WHERE " . $this->where . ";";
+        dd($sql);
         query($sql);
     }
 

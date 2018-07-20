@@ -29,17 +29,25 @@
                     <td><?=$attr['created_at'] ?></td>
                     <td><?=$attr['updated_at'] ?></td>
                     <td>
-                        <a href="#">
+                        <a href="<?= route('post/show' , ['id'=>$attr['id']])?>">
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="#">
-                            <i class="fas fa-pencil-alt"></i>
-                        </a>
-                        <form class="form-inline" id="inlne-form" method="post" action="#" >
-                            <button id="trash" type="submit" class="btn btn-link">
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </form>
+                        <?php
+                        if ($attr['user_id']==\Core\Auth::getId()){
+                            ?>
+                            <a href="<?= route('post/edit',['id'=>$attr['id']])?>">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <form class="form-inline" id="inlne-form" method="post" action="<?= route('post/delete',['id'=>$attr['id']])?>" >
+                                <button id="trash" type="submit" class="btn btn-link">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        <?php
+                        }
+                        ?>
+
+
                     </td>
             </tr>
                     <?php
