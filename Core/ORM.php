@@ -18,7 +18,9 @@ class ORM
 
     protected $set;
 
-    protected $attributes = [];
+    protected $join;
+
+    public $attributes = [];
 
     public function getAttributes()
     {
@@ -44,9 +46,14 @@ class ORM
             $query .= " * ";
         }
         $query .= " FROM " . $this->getTable();
+
+        if ($this->join) {
+            $query .= $this->join;
+        }
         if ($this->where) {
             $query .= " WHERE " . $this->where;
         }
+
         if ($this->order) {
             $query .= " ORDER BY " . $this->order;
         }
@@ -57,7 +64,6 @@ class ORM
                 $offset .= " OFFSET " . $this->offset;
             }
         }
-
         global $pdh;
         $statement = $pdh->query($query);
         return $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
@@ -151,5 +157,10 @@ class ORM
     {
         $sql = "UPDATE $table" . $this->set . "WHERE " . $this->where . ";";
         query($sql);
+    }
+
+    public function join($to, $with, $operator = "=", $onWith){
+        $this->join= " JOIN $to ON $with $operator $onWith ";
+        return $this;
     }
 }
