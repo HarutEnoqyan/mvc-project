@@ -1,3 +1,6 @@
-<h1 class="text-center">Wellcome</h1>
 <?php
-//var_dump($params);
+if(\Core\Auth::checkIfAuth()){
+    redirect(route('user/index'));
+}
+?>
+<h1 class="text-center">Wellcome</h1>
