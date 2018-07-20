@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\User;
+use Core\Auth;
 
 
 class UserController
@@ -15,7 +16,14 @@ class UserController
         $user = new User();
         $user->create();
         $userName = $_POST['first_name'];
-        header("Location: ".route('user/check' ,['name' => $userName])." ");
+        $token = md5(rand() );
+        $userId = $user->login()->getAttributes()['id'];
+        session_start();
+        $_SESSION['token']=$token;
+        $_SESSION['id']=$userId;
+//            dd($_SESSION);
+        $user->updateToken($userId,$token);
+        header("Location: ".route('user/Index' ,['name' => $userName])." ");
     }
 
     public function actionCheck() {
@@ -31,15 +39,14 @@ class UserController
             $user->updateToken($userId,$token);
 
             $name = $user->login()->getAttributes()['first_name'];
-            header("Location: ".route('user/index' ,['name' => $name , 'token'=>$token])." ");
+            header("Location: ".route('user/index' ,['name' => $name ])." ");
         } else {
             header("Location: ".route('main/login')." ");
         }
     }
 
     public function actionLogout() {
-        session_start();
-        session_destroy();
+        Auth::logOut();
         redirect(route('main/index'));
     }
 }

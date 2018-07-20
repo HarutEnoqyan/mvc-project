@@ -29,8 +29,7 @@
             </ul>
 
             <?php
-            session_start();
-            if ($_SESSION && $_SESSION['token']){?>
+            if (\Core\Auth::checkIfAuth()){?>
                 <a class="nav-link" href="<?=route("user/logout")?>">Logout</a>
 
             <?php }
