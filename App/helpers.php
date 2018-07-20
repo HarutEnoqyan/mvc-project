@@ -2,7 +2,10 @@
 
  function dd($arg)
 {
- var_dump($arg);die();
+    echo "<pre>";
+    var_dump($arg);
+    echo "</pre>";
+    die();
 }
 
 function view($viewName , $params = []) {
