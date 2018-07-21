@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use App\Models\Post;
 use Core\Auth;
+use Core\Validation;
 
 class PostController {
 
@@ -29,8 +30,21 @@ class PostController {
 
     public function actionSave() {
         $posts= new Post();
-        $posts->attributes['title']=$_REQUEST['title'];
-        $posts->attributes['content']=$_REQUEST['content'];
+
+        if (Validation::validateTitle($_REQUEST['title'])=== true){
+            $posts->attributes['title']=$_REQUEST['title'];
+        }else{
+           $error = Validation::validateTitle($_REQUEST['title']);
+           dd($error);
+        }
+
+        if (Validation::validateContent($_REQUEST['content'])===true){
+            $posts->attributes['content']=$_REQUEST['content'];
+        }else {
+           $error =  Validation::validateContent($_REQUEST['content']);
+           dd($error);
+        }
+
         $posts->attributes['created_at']=date("Y-m-d H:i:s");
         $posts->attributes['user_id']=Auth::getId();
         $posts->insert();
@@ -53,6 +67,7 @@ class PostController {
     public function actionDelete() {
         $id = $_GET['id'];
         $posts= new Post();
+        $data = $posts->select('user_id')->where("id=$id")->first()->attributes;
         if($data['user_id']==Auth::getId()){
             $posts->where("id = $id")
                 ->delete();
@@ -85,7 +100,14 @@ class PostController {
         $posts= new Post();
         $title=$_REQUEST['title'];
         $content=$_REQUEST['content'];
-        $posts->where("id=$id")->set(['title','content','updated_at'],["$title" , "$content", date("Y-m-d H:i:s")])->update();
+        $posts->where("id=$id")
+              ->set(['title','content','updated_at'],["$title" , "$content", date("Y-m-d H:i:s")])
+              ->update();
         redirect(route('post/index'));
+    }
+
+    public function actionTest()
+    {
+        dd(Validation::validateDate("2018.07-19 10:32:44"));
     }
 }
