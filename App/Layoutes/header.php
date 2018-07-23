@@ -18,9 +18,17 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="<?=route("post/index")?>">Posts <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link3</a>
-                </li>
+                <?php
+                if ( isset($_GET['route']) && $_GET['route']=='post/index'){
+                    ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?=route('post/create')?>">
+                            <i class="fas fa-plus"></i>
+                            Add new Post</a>
+                    </li>
+                <?php
+                }
+                ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="#">Link2</a>
                 </li>

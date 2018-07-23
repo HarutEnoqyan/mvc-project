@@ -1,71 +1,67 @@
+<?php
+?>
 <div class="container mt-lg-2">
-        <a href="<?=route('post/create')?>" class="btn btn-success btn-sm" style="margin-bottom: 5px">
-            <i class="fas fa-plus"></i>
-            Add New
-        </a>
-        <table class="table table-condensed table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Creator</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-
-                <?php
-                foreach ($params as $table=>$row) {
-                    $attr = $row->attributes
-                    ?>
-                    <tr>
-                    <td><?=$attr['id'] ?></td>
-                    <td><?=$attr['first_name'] ." " . $attr['last_name'] ?></td>
-                    <td><?=$attr['title'] ?></td>
-                    <td><?=$attr['content'] ?></td>
-                    <td><?=$attr['created_at'] ?></td>
-                    <td><?=$attr['updated_at'] ?></td>
-                    <td>
-                        <a href="<?= route('post/show' , ['id'=>$attr['id']])?>">
-                            <i class="far fa-eye"></i>
-                        </a>
-                        <?php
-                        if ($attr['user_id']==\Core\Auth::getId()){
-                            ?>
-                            <a href="<?= route('post/edit',['id'=>$attr['id']])?>">
-                                <i class="fas fa-pencil-alt"></i>
-                            </a>
-                            <form class="form-inline" id="inlne-form" method="post" action="<?= route('post/delete',['id'=>$attr['id']])?>" >
-                                <button id="trash" type="submit" class="btn btn-link">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        <?php
-                        }
-                        ?>
-
-
-                    </td>
-            </tr>
+    <?php
+    foreach ($params as $table=>$row) {
+        $attr = $row->attributes
+        ?>
+        <div class="col-md-10 mb-5">
+            <div class="row">
+                <div class="col-md-12"><h2><?=$attr['title'] ?></h2></div>
+            </div>
+            <div class="row  content_row">
+                <div class="col-md-12 content">
+                    <p><?=$attr['content'] ?></p>
+                </div>
+                <div class="col-md-12">
+                    <p class="p-0 mb-0"><small>Author : <?=$attr['first_name'] ." " . $attr['last_name'] ?>  </small></p>
+                    <p class="p-0 mb-0"><small>Created at: <?=$attr['created_at'] ?></small></p>
                     <?php
-                }
+                    if (isset($attr['updated_at'])){
+                        ?>
+                        <p class="p-0"><small>Updated at: <?=$attr['updated_at'] ?></small></p>
+
+                        <?php
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-5">
+            <div class="col-md-12">
+                <button class="btn">
+                    <a href="<?= route('post/show' , ['id'=>$attr['id']])?>">
+                        <i class="far fa-eye"></i>
+                    </a
+                </button>
+            </div>
+            <?php
+            if ($attr['user_id']==\Core\Auth::getId()){
                 ?>
+                <div class="col-md-12">
+                    <a href="<?= route('post/edit',['id'=>$attr['id']])?>">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </div>
+                <div class="col-md-12">
+                    <form class="form-inline" id="inlne-form" method="post" action="<?= route('post/delete',['id'=>$attr['id']])?>" >
+                        <button id="trash" type="submit" class="btn btn-link">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </form>
+                </div>
+                <?php
+            }
+            ?>
 
-            </tbody>
-
-            <tfoot>
-            <tr>
-                <th>ID</th>
-                <th>Creator</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>Actions</th>
-            </tr>
-            </tfoot>
-        </table>
+        </div>
+        <?php
+    }
+    ?>
 </div>
+
+
+
+
+
+

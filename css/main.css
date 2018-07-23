@@ -10,3 +10,15 @@
 #inlne-form > button {
     padding: 0;
 }
+
+.content {
+    font-size: 20px;
+
+    padding: 25px;
+
+}
+
+.content_row {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

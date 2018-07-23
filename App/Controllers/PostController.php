@@ -114,12 +114,14 @@ class PostController {
         $this->uncheckedData['title'] = $_REQUEST['title'];
         $this->uncheckedData['content'] = $_REQUEST['content'];
 
+        $title = '';
         if (Validation::validateTitle($_REQUEST['title'])=== true){
             $title=$_REQUEST['title'];
         }else{
             $this->validateErrors['title'] =Validation::validateTitle($_REQUEST['title']);
         }
 
+        $content = '';
         if (Validation::validateContent($_REQUEST['content'])===true){
             $content=$_REQUEST['content'];
         }else {
@@ -128,7 +130,7 @@ class PostController {
 
         if (count($this->validateErrors)===0) {
             $posts->where("id=$id")
-                ->set(['title','content','updated_at'],["$title" , "$content", date("Y-m-d H:i:s")])
+                ->set(['title','content','updated_at'],[$title , $content, date("Y-m-d H:i:s")])
                 ->update();
             redirect(route('post/index'));
         } else {
