@@ -74,6 +74,9 @@ class Validation {
 
     public static function validateEmail($str)
     {
+        if (trim($str) == "" ) {
+            return 'email required';
+        }
         if (filter_var($str, FILTER_VALIDATE_EMAIL)){
            return true;
         }else{

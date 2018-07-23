@@ -19,7 +19,7 @@ class PostController {
 
             view("Posts/index", $data );
         } else{
-            redirect('/');
+            redirect(route('main/login'));
         }
     }
 

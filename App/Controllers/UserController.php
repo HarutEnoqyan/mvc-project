@@ -93,23 +93,59 @@ class UserController
     }
 
     public function actionCheck() {
-
-        $user = new User();
-        if (  $user->login()  ){
-            $token = md5(rand() );
-            $userId = $user->login()->getAttributes()['id'];
-            $userName = $user->login()->getAttributes()['first_name'];
-            session_start();
-            $_SESSION['token']=$token;
-            $_SESSION['id']=$userId;
-            $_SESSION['name']=$userName;
-            $user->updateToken($userId,$token);
+        $unchekedValues = [
+            'email' => $_POST['email'],
+            'password' => $_POST['password']
+        ];
 
 
-            header("Location: ".route('user/index' )." ");
-        } else {
-            header("Location: ".route('main/login')." ");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (Validation::validateEmail($email =$_POST['email'])===true) {
+                $email ="'".$_POST['email']."'";
+            }else {
+                $this->validationErrors['email'] = Validation::validateEmail($email =$_POST['email']);
+            }
+
+            if (Validation::validatePass($_POST['password'])===true) {
+                $password = $_POST['password'];
+            }else {
+                $this->validationErrors['password']=Validation::validatePass($_POST['password']);
+            }
         }
+
+
+        if (count($this->validationErrors)==0){
+            $users = new User;
+            $user = $users->where("email=$email")->first()->attributes;
+            if (isset($user) && $user['password']===$password){
+                $token = md5(rand());
+                $userId = $user['id'];
+                $userName = $user['first_name'];
+                session_start();
+                $_SESSION['token']=$token;
+                $_SESSION['id']=$userId;
+                $_SESSION['name']=$userName;
+                $this->updateToken($userId,$token);
+                redirect(route('main/index'));
+            } else {
+                session_start();
+                $_SESSION['old'] = $unchekedValues;
+                $_SESSION['login_error'] = 'Invalid email or password';
+                redirect(route('main/login'));
+            }
+        }else {
+            session_start();
+            $_SESSION['errors'] = $this->validationErrors;
+            $_SESSION['old'] = $unchekedValues;
+            redirect(route('main/login'));
+        }
+
+    }
+
+    public function updateToken($id,$token)
+    {
+        $user = new User();
+        $user->where("id = $id")->set(['token'],[$token])->update();
     }
 
     public function actionLogout() {

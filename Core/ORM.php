@@ -69,6 +69,7 @@ class ORM
             }
         }
         global $pdh;
+//        dd($query);
         $statement = $pdh->query($query);
         return $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
     }
