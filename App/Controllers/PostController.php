@@ -30,7 +30,6 @@ class PostController {
 
     public function actionSave() {
         $posts= new Post();
-
         if (Validation::validateTitle($_REQUEST['title'])=== true){
             $posts->attributes['title']=$_REQUEST['title'];
         }else{

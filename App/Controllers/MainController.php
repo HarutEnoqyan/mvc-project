@@ -20,6 +20,7 @@ class MainController
     }
 
     public function actionRegister() {
+
         view('register');
     }
 }

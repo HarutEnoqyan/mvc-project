@@ -6,7 +6,7 @@ class Auth {
         if (session_id()===''){
             session_start();
         }
-        if($_SESSION && $_SESSION['token'] && $_SESSION['id']){
+        if($_SESSION && isset($_SESSION['token']) && isset($_SESSION['id'])){
             return true;
         } else {
             return false;
@@ -25,7 +25,9 @@ class Auth {
         if (session_id()===''){
             session_start();
         }
-        return $_SESSION['id'];
+        if ($_SESSION && isset($_SESSION['id'])){
+            return $_SESSION['id'];
+        }
     }
 
 
