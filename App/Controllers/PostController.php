@@ -5,6 +5,8 @@ use Core\Auth;
 use Core\Validation;
 
 class PostController {
+    protected $validateErrors = [];
+    protected $uncheckedData = [];
 
     public function actionIndex()
     {
@@ -30,24 +32,35 @@ class PostController {
 
     public function actionSave() {
         $posts= new Post();
+
+        $this->uncheckedData['title'] = $_REQUEST['title'];
+        $this->uncheckedData['content'] = $_REQUEST['content'];
+
         if (Validation::validateTitle($_REQUEST['title'])=== true){
             $posts->attributes['title']=$_REQUEST['title'];
         }else{
-           $error = Validation::validateTitle($_REQUEST['title']);
-           dd($error);
+           $this->validateErrors['title'] =Validation::validateTitle($_REQUEST['title']);
         }
 
         if (Validation::validateContent($_REQUEST['content'])===true){
             $posts->attributes['content']=$_REQUEST['content'];
         }else {
-           $error =  Validation::validateContent($_REQUEST['content']);
-           dd($error);
+            $this->validateErrors['content'] = Validation::validateContent($_REQUEST['content']);
         }
 
-        $posts->attributes['created_at']=date("Y-m-d H:i:s");
-        $posts->attributes['user_id']=Auth::getId();
-        $posts->insert();
-        redirect(route('post/index'));
+        if (count($this->validateErrors)===0) {
+            $posts->attributes['created_at']=date("Y-m-d H:i:s");
+            $posts->attributes['user_id']=Auth::getId();
+            $posts->insert();
+            redirect(route('post/index'));
+        } else {
+            session_start();
+            $_SESSION['old'] = $this->uncheckedData;
+            $_SESSION['errors'] = $this->validateErrors;
+            redirect(route('post/create'));
+        }
+
+
     }
 
     public function actionShow() {
@@ -80,7 +93,7 @@ class PostController {
 
     public function actionEdit() {
         $id = $_GET['id'];
-        $posts= new Post();
+        $posts = new Post();
         $data = $posts
             ->select('posts.*, users.id as user_id, users.first_name, users.last_name')
             ->join('users', 'users.id',  '=', 'posts.user_id')
@@ -97,12 +110,35 @@ class PostController {
     public function actionUpdate() {
         $id = $_GET['id'];
         $posts= new Post();
-        $title=$_REQUEST['title'];
-        $content=$_REQUEST['content'];
-        $posts->where("id=$id")
-              ->set(['title','content','updated_at'],["$title" , "$content", date("Y-m-d H:i:s")])
-              ->update();
-        redirect(route('post/index'));
+
+        $this->uncheckedData['title'] = $_REQUEST['title'];
+        $this->uncheckedData['content'] = $_REQUEST['content'];
+
+        if (Validation::validateTitle($_REQUEST['title'])=== true){
+            $title=$_REQUEST['title'];
+        }else{
+            $this->validateErrors['title'] =Validation::validateTitle($_REQUEST['title']);
+        }
+
+        if (Validation::validateContent($_REQUEST['content'])===true){
+            $content=$_REQUEST['content'];
+        }else {
+            $this->validateErrors['content'] = Validation::validateContent($_REQUEST['content']);
+        }
+
+        if (count($this->validateErrors)===0) {
+            $posts->where("id=$id")
+                ->set(['title','content','updated_at'],["$title" , "$content", date("Y-m-d H:i:s")])
+                ->update();
+            redirect(route('post/index'));
+        } else {
+            session_start();
+            $_SESSION['old'] = $this->uncheckedData;
+            $_SESSION['errors'] = $this->validateErrors;
+            redirect(route('post/edit' , ['id' => $id ]));
+        }
+
+
     }
 
     public function actionTest()

@@ -1,5 +1,10 @@
 <?php
-$attr = $params;
+if (session_id()=='') {
+    session_start();
+}
+if (isset($params)) {
+    $attr = $params;
+}
 ?>
 <div class="container mt-5">
     <form action="<?=route('post/update' , ['id'=>$attr['id']])?>" method="post">
@@ -8,8 +13,11 @@ $attr = $params;
                 <label for="title"> Title :</label>
             </div>
             <div class="col-md-10">
-                <input name="title" id="title" type="text" class="form-control" value="<?= $attr['title'] ?>" >
+                <input name="title" id="title" type="text" class="form-control <?= isset($_SESSION['errors']['title'])===true ? 'is-invalid' : '' ?>" value="<?= isset($_SESSION['old']['title'])===true ? $_SESSION['old']['title'] : $attr['title'] ?>" >
+                <span class="text-danger"> <?= isset($_SESSION['errors']['title'])===true ? $_SESSION['errors']['title'] : '' ?></span>
+
             </div>
+
         </div>
 
         <div class="row mt-3">
@@ -17,7 +25,9 @@ $attr = $params;
                 <label for="content"> Content :</label>
             </div>
             <div class="col-md-10">
-                <textarea name="content" id="content" class="form-control" style="resize: none"><?= $attr['content'] ?></textarea>
+                <textarea name="content" id="content" class="form-control <?= isset($_SESSION['errors']['content'])===true ? 'is-invalid' : '' ?> " style="resize: none"><?= isset($_SESSION['old']['content'])===true ? $_SESSION['old']['content'] : $attr['content'] ?></textarea>
+                <span class="text-danger"> <?= isset($_SESSION['errors']['content'])===true ? $_SESSION['errors']['content'] : '' ?></span>
+
             </div>
         </div>
 
@@ -32,3 +42,7 @@ $attr = $params;
         </div>
     </form>
 </div>
+
+<?php
+unset($_SESSION['errors']);
+unset($_SESSION['old']);
