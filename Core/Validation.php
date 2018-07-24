@@ -121,7 +121,7 @@ class Validation {
     {
         $str = trim($str);
 
-        if ($str && $str !='' && strlen($str)>=10 && strlen($str)<=255) {
+        if ($str && $str !='' && strlen($str)>=10 && strlen($str)<=500) {
             return true;
         }else {
             switch ($str) {
@@ -130,7 +130,7 @@ class Validation {
                     break;
                 case (strlen($str) < 10) : return "Content can't be less than 10 simbols";
                     break;
-                case (strlen($str) > 255) : return "Content can't be more than 255 simbols";
+                case (strlen($str) > 500) : return "Content can't be more than 500 simbols";
                     break;
 
             }
