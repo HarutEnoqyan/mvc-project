@@ -23,9 +23,35 @@ $(document).ready(function () {
 
     });
 
+    $(document).on('keydown','.ajax_input', function (event) {
+       if (event.keyCode===13){
+           post_id = $(this).attr('data-post-id');
+           comment = $(this).val();
+
+           $.ajax({
+
+               url: '?route=comment/create',
+               type: 'POST',
+               data: 'post_id='+post_id+'&comment='+comment,
+               success: function(result){
+                   result = JSON.parse(result);
+                   $('div#comment'+post_id).append(result);
+
+               }
+
+           });
+           $(this).val(' ');
+       }
+
+
+    });
+
     function getVal(id) {
         comment = $('input#' + id).val();
-        // console.log([post_id,comment]);
+        $('input#' + id).val('');
+        // consolelog([post_id,comment]);
+        // consolelog([post_id,comment]);
+
     }
 
 

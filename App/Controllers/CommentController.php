@@ -47,7 +47,10 @@ class CommentController {
     public static function actionShow()
     {
         $comments = new Comment();
-        $allCommetns = $comments->get();
+        $allCommetns =  $comments
+            ->select('comments.*, users.first_name, users.last_name')
+            ->join('users', 'users.id',  '=', 'comments.user_id')
+            ->get();
         return $allCommetns;
     }
 }

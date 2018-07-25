@@ -20,6 +20,7 @@ class PostController {
                 ->join('users', 'users.id',  '=', 'posts.user_id')
                 ->get();
             $comments = CommentController::actionShow();
+
             $a = [];
             foreach ($comments as $comment){
                 $a[] = $comment->attributes;
@@ -91,7 +92,7 @@ class PostController {
         $data = $posts->select('user_id')->where("id=$id")->first()->attributes;
         if($data['user_id']==Auth::getId()){
             $posts->where("id = $id")
-                ->delete();
+                  ->delete();
             redirect(route('post/index'));
         }else {
             redirect(route('post/index'));

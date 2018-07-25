@@ -71,6 +71,11 @@ class ORM
         global $pdh;
 //        dd($query);
         $statement = $pdh->query($query);
+//        dd($statement);
+        if (!$statement) {
+            echo "\nPDO::errorInfo():\n";
+            print_r($pdh->errorInfo());
+        }
         return $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
     }
 
@@ -172,7 +177,7 @@ class ORM
     }
 
     public function join($to, $with, $operator = "=", $onWith){
-        $this->join= " JOIN $to ON $with $operator $onWith ";
+        $this->join= " JOIN $to ON $with $operator $onWith ;";
         return $this;
     }
 

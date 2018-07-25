@@ -2,18 +2,27 @@
 ?>
 <div class="container mt-lg-2">
     <?php
+//    dd($params);
     foreach ($params as $row) {
-        $attr = $row->attributes;
+        if (isset( $row->attributes)){
+            $attr = $row->attributes;
+        }
         $comments = $params['comments'];
+        $count = 0;
+
         foreach ($comments as $comment){
             if ($comment['post_id']==$attr['id']){
-                $attr['comment']['content']=$comment['content'];
+                $count++;
 
+                $com=[];
+                $com['content']=$comment['content'];
+                $com['author'] = $comment['first_name'] . " " . $comment['last_name'];
+                $com['created_at'] = $comment['created_at'];
+                $com['post_id'] = $comment['post_id'];
+                $attr['comments'][]=$com;
             }
         }
-        if (isset($attr['comment'])){
-            var_dump($attr['comment']);
-        }
+
         ?>
     <div class="row mb-5">
         <div class="col-md-11">
@@ -71,7 +80,7 @@
         </div>
         <div class="col-md-11">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#Collapse<?=$attr['id']?>" aria-expanded="false" aria-controls="collapseExample">
-                Comments <span class="comments-count"></span>
+                <?=$count." "?> <?=$count==1?'Comment' : 'Comments'?> <span class="comments-count"></span>
             </button>
             <div class="com-md-12 collapse" id="Collapse<?=$attr['id']?>">
                 <div class="card card-body">
@@ -82,47 +91,44 @@
                                    <h2>Comments</h2>
                                </div>
                                <div class="col-md-6 text-right">
-                                   <small class=""><span class="comments-count">15</span> comments</small>
+                                   <small class=""><span class="comments-count"><?=$count?></span><?=$count==1?' Comment' : ' Comments'?></small>
                                </div>
                            </div>
                        </div>
-                       <div class='comments-list border-bottom'>
-                           <div class='media'>
-                               <a class='media-left' href='#'>
-                                   <!--                                <img src="http://lorempixel.com/40/40/people/1/">-->
-                               </a>
-                               <div class='media-body'>
+                       <?php
+                            if (isset($attr['comments'])){
+                                foreach ($attr['comments'] as $comment) {
+                                    ?>
+                                    <div class='comments-list border-bottom'>
+                                        <div class='media'>
+                                            <a class='media-left' href='#'>
+                                                <!--                                <img src="http://lorempixel.com/40/40/people/1/">-->
+                                            </a>
+                                            <div class='media-body'>
 
-                                   <h4 class='media-heading user_name'>Baltej Singh </h4>
-                                   Wow! this is really great.
-                                   <small class='float-right'>5 days ago</small>
-                                   <p><small><a href=''>Reply</a></small></p>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="comments-list border-bottom">
-                           <div class="media">
-                               <a class="media-left" href="#">
-                                   <!--                                <img src="http://lorempixel.com/40/40/people/1/">-->
-                               </a>
-                               <div class="media-body">
+                                                <h4 class='media-heading user_name'><?= $comment['author']?></h4>
+                                                <?= $comment['content']?>
+                                                <small class='float-right'><?= $comment['created_at']?></small>
+                                                <p><small><a href=''>Reply</a></small></p>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                   <h4 class="media-heading user_name">Baltej Singh </h4>
-                                   Wow! this is really great.
-                                   <small class="float-right">5 days ago</small>
-                                   <p><small><a href="">Reply</a></small></p>
-                               </div>
-                           </div>
-                       </div>
+                                    <?php
+                                }
+                            }
+                       ?>
+
+
                    </div>
-                    <form action="#" method="post" class="mt-2 ml-2">
+                    <div class="mt-2 ml-2">
                         <div class="form-group row">
-                            <input name="comment" type="text" class="form-control col-md-11" placeholder="Write a comment" id="id<?=$attr['id']?>">
+                            <input name="comment" type="text" class="ajax_input form-control col-md-11" placeholder="Write a comment" id="id<?=$attr['id']?>" data-post-id="<?=$attr['id']?>">
                             <button class="btn btn-primary ajax_button" type="button" data-post-id="<?=$attr['id']?>" data-id="id<?=$attr['id']?>">
                                 <i class="far fa-edit text-light"></i>
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
