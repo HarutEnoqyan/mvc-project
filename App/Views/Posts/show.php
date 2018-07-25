@@ -1,5 +1,8 @@
 <?php
-$attr = $params;
+if(isset($params)){
+    $attr = $params;
+//    dd($attr);
+}
 ?>
 <div class="container mt-5">
     <div class="row">
@@ -25,7 +28,7 @@ $attr = $params;
             Author :
         </div>
         <div class="col-md-10">
-            <p> <?=$attr['first_name'] . " " . $attr['last_name'] ?> <span> At: <?=$attr['created_at']?> </span></p>
+            <p> <?=$attr['user_data']['first_name'] . " " . $attr['user_data']['last_name'] ?> <span> At: <?=$attr['created_at']?> </span></p>
             <button class="btn btn-primary btn-lg"><a href="<?=route('post/index')?>" style="color: white;">Back</a></button>
         </div>
     </div>

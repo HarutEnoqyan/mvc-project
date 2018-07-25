@@ -4,9 +4,9 @@
     <?php
 //    dd($params);
     foreach ($params as $row) {
+//        dd($params);
         if (isset( $row->attributes)){
             $attr = $row->attributes;
-        }
         $comments = $params['comments'];
         $count = 0;
 
@@ -135,6 +135,8 @@
     </div>
 
         <?php
+        }
+
     }
     ?>
 </div>

@@ -36,13 +36,12 @@ if (isset($params)) {
                 Author :
             </div>
             <div class="col-md-10">
-                <p> <?=$attr['first_name'] . " " . $attr['last_name'] ?> <span> At: <?=$attr['created_at']?> </span></p>
+                <p> <?=$attr['user_data']['first_name'] . " " . $attr['user_data']['last_name'] ?> <span> At: <?=$attr['created_at']?> </span></p>
                 <button type="submit" class="btn btn-primary btn-lg">Save</button>
             </div>
         </div>
     </form>
 </div>
-
 <?php
 unset($_SESSION['errors']);
 unset($_SESSION['old']);

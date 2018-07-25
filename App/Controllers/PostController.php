@@ -76,13 +76,20 @@ class PostController {
     public function actionShow() {
         $id = $_GET['id'];
         $posts= new Post();
+        $post = $posts
+            ->where("id = $id")
+            ->first()->attributes;
+
         $data = $posts
             ->select('posts.*, users.id as user_id, users.first_name, users.last_name')
             ->join('users', 'users.id',  '=', 'posts.user_id')
-            ->where("posts.id = $id")
+            ->where("id = $id")
             ->first()->attributes;
+        $post['user_data']=$data;
 
-        view("Posts/show", $data );
+
+
+        view("Posts/show", $post );
 
     }
 
@@ -104,13 +111,19 @@ class PostController {
     public function actionEdit() {
         $id = $_GET['id'];
         $posts = new Post();
+
+        $post = $posts
+            ->where("id = $id")
+            ->first()->attributes;
         $data = $posts
             ->select('posts.*, users.id as user_id, users.first_name, users.last_name')
             ->join('users', 'users.id',  '=', 'posts.user_id')
             ->where("posts.id = $id")
             ->first()->attributes;
+
+        $post['user_data']=$data;
         if($data['user_id']==Auth::getId()){
-            view("Posts/edit", $data );
+            view("Posts/edit", $post );
         }else {
             redirect(route('post/index'));
         }
