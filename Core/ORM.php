@@ -138,7 +138,7 @@ class ORM
             return $pdh->quote($item);
         }, $this->attributes));
         $tableName = $this->getTable();
-        $sql = "INSERT INTO $tableName ($fields) VALUES ($values)";
+        $sql = "INSERT INTO $tableName ($fields) VALUES ($values);";
 //        dd($sql);
         query($sql);
     }

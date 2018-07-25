@@ -3,6 +3,7 @@ namespace App\Controllers;
 use App\Models\Post;
 use Core\Auth;
 use Core\Validation;
+use App\Controllers\CommentController;
 
 class PostController {
     protected $validateErrors = [];
@@ -18,11 +19,19 @@ class PostController {
                 ->select('posts.*, users.id as user_id, users.first_name, users.last_name')
                 ->join('users', 'users.id',  '=', 'posts.user_id')
                 ->get();
-
+            $comments = CommentController::actionShow();
+            $a = [];
+            foreach ($comments as $comment){
+                $a[] = $comment->attributes;
+            }
+            $data['comments'] = $a;
             view("Posts/index", $data );
         } else{
             redirect(route('main/login'));
         }
+
+
+
     }
 
     public function actionCreate()
