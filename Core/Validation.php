@@ -138,4 +138,24 @@ class Validation {
         return "validation failed";
     }
 
+    public static function validateComment($str) {
+        $str = trim($str);
+
+        if ($str && $str !='' && strlen($str)>=1 && strlen($str)<=255) {
+            return true;
+        }else {
+            switch ($str) {
+                case ' ' :
+                case '' : return "Comment required";
+                    break;
+                case (strlen($str) < 1) : return "Content can't be less than 1 simbol";
+                    break;
+                case (strlen($str) > 255) : return "Content can't be more than 255 simbols";
+                    break;
+
+            }
+        }
+        return "validation failed";
+    }
+
 }
