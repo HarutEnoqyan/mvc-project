@@ -46,6 +46,31 @@ $(document).ready(function () {
 
     });
 
+    $(document).on('click','.ajax_reply_button', function (event) {
+        input_id = $(this).attr('data-id');
+        comment_id = $(this).attr('data-comment-id');
+        comment = $('input#'+input_id).val();
+        console.log(comment);
+
+        $.ajax({
+
+            url: '?route=replyes/create',
+            type: 'POST',
+            data: 'comment_id='+comment_id+'&content='+comment,
+            success: function(result){
+                console.log(result);
+                // result = JSON.parse(result);
+                $('div#reply'+comment_id).prepend(result);
+
+
+            }
+
+        });
+
+
+    });
+
+
     function getVal(id) {
         comment = $('input#' + id).val();
         $('input#' + id).val('');

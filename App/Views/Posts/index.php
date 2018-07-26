@@ -4,24 +4,25 @@
     <?php
 //    dd($params);
     foreach ($params as $row) {
-//        dd($params);
         if (isset( $row->attributes)){
             $attr = $row->attributes;
         $comments = $params['comments'];
         $count = 0;
-
         foreach ($comments as $comment){
             if ($comment['post_id']==$attr['id']){
                 $count++;
-
                 $com=[];
+                $com['replyes']=[];
                 $com['content']=$comment['content'];
                 $com['author'] = $comment['first_name'] . " " . $comment['last_name'];
                 $com['created_at'] = $comment['created_at'];
                 $com['post_id'] = $comment['post_id'];
+                $com['comment_id'] = $comment['id'];
                 $attr['comments'][]=$com;
             }
-        }
+
+        };
+
 
         ?>
     <div class="row mb-5">
@@ -101,15 +102,23 @@
                                     ?>
                                     <div class='comments-list border-bottom'>
                                         <div class='media'>
-                                            <a class='media-left' href='#'>
-                                                <!--                                <img src="http://lorempixel.com/40/40/people/1/">-->
-                                            </a>
                                             <div class='media-body'>
-
                                                 <h4 class='media-heading user_name'><?= $comment['author']?></h4>
                                                 <?= $comment['content']?>
                                                 <small class='float-right'><?= $comment['created_at']?></small>
-                                                <p><small><a href=''>Reply</a></small></p>
+                                                <div id="reply<?=$comment['comment_id']?>">
+                                                    <button class='btn btn-primary btn-sm' type='button' data-toggle='collapse' data-target='#CollapseReply<?=$comment['comment_id']?>' aria-expanded='false' aria-controls='collapseExample'>
+                                                        <small>Reply</small>
+                                                    </button>
+                                                    <div class='com-md-12 collapse' id='CollapseReply<?=$comment['comment_id']?>'>
+                                                        <div class='form-group row mt-2'>
+                                                            <input name='comment_reply' type='text' class=' ml-3 ajax_reply_input form-control col-md-11' placeholder='Reply' id='reply_id<?=$comment['comment_id']?>' >
+                                                            <button class='btn btn-primary ajax_reply_button' type='button'  data-id='reply_id<?=$comment['comment_id']?>' data-comment-id='<?=$comment['comment_id']?>'>
+                                                                <i class='far fa-edit text-light'></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
