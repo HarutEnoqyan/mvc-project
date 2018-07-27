@@ -9,27 +9,112 @@ class PostController {
     protected $validateErrors = [];
     protected $uncheckedData = [];
 
+    /**
+     *
+     */
     public function actionIndex()
     {
         if(Auth::checkIfAuth()){
-            $posts= new Post();
+            $post = new Post();
+
+            $selects = [
+                "posts.id as post_id",
+                "posts.content as post_content",
+                "posts.title as post_title",
+                "posts.created_at as post_created_at",
+                "posts.updated_at as post_updated_at",
+                "posts.user_id as post_user_id",
+                "CONCAT(post_user.first_name, ' ' , post_user.last_name) as post_author",
+                "CONCAT(comment_user.first_name, ' ' , comment_user.last_name) as comment_author",
+                "CONCAT(replyes_user.first_name, ' ' , replyes_user.last_name) as reply_author",
+                "comments.content as comment_content",
+                "comments.created_at as comment_created_at",
+                "comments.id as comment_id",
+                "replyes.content as reply_content",
+                "replyes.created_at as reply_created_at",
+                "replyes.id as reply_id"
+            ];
+
+            $posts = $post->select(implode(',' , $selects))
+                ->join('comments', 'posts.id', '=', 'comments.post_id')
+                ->doubleJoin('replyes', 'comments.id', '=', 'replyes.comment_id')
+                ->doubleJoin('users as post_user', 'posts.user_id', '=', 'post_user.id')
+                ->doubleJoin('users as comment_user', 'comments.user_id', '=', 'comment_user.id')
+                ->doubleJoin('users as replyes_user', 'replyes.user_id', '=', 'replyes_user.id')
+                ->toArray();
+
+//            dd($posts);
 
 
-//            dd($posts->get());
-            $data = $posts
-                ->select('posts.*, users.id as user_id, users.first_name, users.last_name')
-                ->join('users', 'users.id',  '=', 'posts.user_id')
-                ->get();
-            $comments = CommentController::actionShow();
+            $result = [];
 
-            $com = [];
-            foreach ($comments as $comment){
-                $com[] = $comment->attributes;
+//            foreach ($posts as $post) {
+//                $post_id = $posts;
+//            }
+
+
+//        dd($allPosts);
+            $data = [];
+
+            foreach ($posts as $post) {
+//            $comment    = $comment->attributes;
+                $comment_id = $post['comment_id'];
+                $post_id    = $post['post_id'];
+
+
+                if(array_key_exists($post_id , $data)) {
+                    if(array_key_exists($comment_id , $data[$post_id]['comments'])) {
+                        $data[$post_id]['comments'][$comment_id]['replyes'][] = [
+                            'reply_content'     => $post['reply_content'],
+                            'reply_author'      => $post['reply_author'],
+                            'reply_created_at'  => $post['reply_created_at']
+                        ];
+
+                        continue;
+                    }
+
+                    $data[$post_id]['comments'][$comment_id] = [
+                        'comment_content' => $post['comment_content'],
+                        'comment_author'  => $post['comment_author'],
+                        'comment_date'    => $post['comment_created_at'],
+                        'comment_id'      => $post['comment_id'],
+                        'replyes'         => !empty($post['reply_content']) ? [
+                            [
+                                'reply_content'     => $post['reply_content'],
+                                'reply_author'      => $post['reply_author'],
+                                'reply_created_at'  => $post['reply_created_at']
+                            ]
+                        ] : []
+                    ];
+
+                    continue;
+                }
+
+
+                $data[$post_id] = [
+                    'post_title'      => $post['post_title'],
+                    'post_content'    => $post['post_content'],
+                    'post_author'     => $post['post_author'],
+                    'post_user_id'    => $post['post_user_id'],
+                    'post_created_at' => $post['post_created_at'],
+                    'post_updated_at' => $post['post_updated_at'],
+                    'post_id'         => $post['post_id'],
+                    'comments' => [
+                        $comment_id => [
+                            'comment_content' => $post['comment_content'],
+                            'comment_author'  => $post['comment_author'],
+                            'comment_date'    => $post['comment_created_at'],
+                            'comment_id'      => $post['comment_id'],
+                            'replyes'         => !empty($post['reply_content']) ? [[
+                                'reply_content'     => $post['reply_content'],
+                                'reply_author'      => $post['reply_author'],
+                                'reply_created_at'  => $post['reply_created_at']
+                            ]] : []
+                        ]
+                    ]
+                ];
 
             }
-
-            $data['comments'] = $com;
-//            dd($data);
 
             view("Posts/index", $data );
         } else{
@@ -91,6 +176,7 @@ class PostController {
             ->where("id = $id")
             ->first()->attributes;
         $post['user_data']=$data;
+
 
 
 

@@ -86,9 +86,9 @@ class ORM
         }
         global $pdh;
 
-
         $statement = $pdh->query($query);
 //        dd($statement);
+//        dd($query);
         if (!$statement) {
             echo "\nPDO::errorInfo():\n";
             print_r($pdh->errorInfo());
@@ -113,6 +113,20 @@ class ORM
         return $this->execute();
     }
 
+
+    public function toArray()
+    {
+        $execute = $this->execute();
+
+        $result = [];
+
+        foreach ($execute as $data) {
+            $result[] = $data->attributes;
+        }
+
+        return $result;
+    }
+
     public function first()
     {
         $this->limit(1);
@@ -132,12 +146,6 @@ class ORM
     public function doubleSelect($columns)
     {
         $this->select .= $columns;
-        return $this;
-    }
-
-
-    public function selectFrom ($sql) {
-        $this->selectFrom = $sql;
         return $this;
     }
 

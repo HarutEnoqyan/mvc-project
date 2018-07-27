@@ -50,7 +50,6 @@ $(document).ready(function () {
         input_id = $(this).attr('data-id');
         comment_id = $(this).attr('data-comment-id');
         comment = $('input#'+input_id).val();
-        console.log(comment);
 
         $.ajax({
 
@@ -59,13 +58,38 @@ $(document).ready(function () {
             data: 'comment_id='+comment_id+'&content='+comment,
             success: function(result){
                 console.log(result);
-                // result = JSON.parse(result);
-                $('div#reply'+comment_id).prepend(result);
+                $('div#rep'+comment_id).append(result);
 
 
             }
 
         });
+
+        $('input#'+input_id).val('');
+
+
+    });
+
+    $(document).on('keydown','.ajax_reply_input', function (event) {
+        if (event.keyCode===13){
+            comment_id = $(this).attr('data-comment-id');
+            comment = $(this).val();
+
+            $.ajax({
+
+                url: '?route=replyes/create',
+                type: 'POST',
+                data: 'comment_id='+comment_id+'&content='+comment,
+                success: function(result){
+                    console.log(result);
+                    $('div#rep'+comment_id).append(result);
+
+
+                }
+
+            });
+            $(this).val(' ');
+        }
 
 
     });
