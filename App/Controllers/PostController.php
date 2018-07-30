@@ -166,21 +166,16 @@ class PostController {
     public function actionShow() {
         $id = $_GET['id'];
         $posts= new Post();
-        $post = $posts
-            ->where("id = $id")
-            ->first()->attributes;
 
         $data = $posts
-            ->select('posts.*, users.id as user_id, users.first_name, users.last_name')
-            ->join('users', 'users.id',  '=', 'posts.user_id')
-            ->where("id = $id")
+//            ->where("id = $id")
+            ->select("posts.*, CONCAT(users.first_name,"."' "."'".",users.last_name) as user_name")
+            ->join('users', 'users.id',  '=', "posts.user_id where posts.id=$id")
             ->first()->attributes;
-        $post['user_data']=$data;
 
 
 
-
-        view("Posts/show", $post );
+        view("Posts/show", $data );
 
     }
 

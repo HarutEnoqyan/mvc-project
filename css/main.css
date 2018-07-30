@@ -1,4 +1,8 @@
+body {
+    background-color: #e6e6e6;
+}
 .form-signin{
+
     width: 300px;
     margin: auto;
 }
@@ -24,3 +28,72 @@ button {
     min-width: 44px;
     margin-bottom: 1px;
 }
+
+.relative {
+    position: relative;
+}
+.absolute {
+    position: absolute;
+}
+
+.post-navbar {
+    right: 35px;
+    top: 5px;
+    z-index: 2;
+}
+
+.dropleft button.dropdown-toggle:before{
+    content: '';
+    display: none;
+}
+
+div.dropdown-menu button.dropdown-item a{
+    display: block;
+}
+a
+{
+    text-decoration:none;
+}
+a:hover {
+    text-decoration:none;
+}
+
+div.blog-content img.profile-pic {
+    border-radius: 50%;
+    width: 4%;
+}
+
+div.comments-list{
+    border-radius: 5px;
+    padding: 15px;
+}
+
+div.comments-list h6.user_name {
+    padding-top: 10px ;
+    margin-left: 50px;
+}
+
+img.comment-author-pic {
+    border-radius: 50%;
+    width: 4%;
+    float: left;
+}
+
+div.replyes div.reply-content {
+    border-radius: 5px;
+}
+
+
+img.reply-author-pic {
+    border-radius: 50%;
+    width: 4%;
+    float: left;
+}
+
+div.post {
+    background-color: white;
+    border-radius: 5px;
+}
+
+
+

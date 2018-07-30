@@ -25,11 +25,12 @@ class ReplyesController {
         $reply->attributes['created_at'] = date("Y-m-d H:i:s");
         $reply->insert();
         $txt = "
-         <div class='border-bottom col-md-10'>
-              <p><b>".Auth::getFullName()."</b></p>
-                 ".$reply->attributes['content']."
+         <div class='border pt-2 reply-content mt-2 col-md-11'>
+            <p><img src='images/default-profile.jpg'  alt='default-profile' class='reply-author-pic mr-2'> ".Auth::getFullName()."</p>
+           
+                ".$reply->attributes['content']."
+                <small class='float-right'>".$reply->attributes['created_at']."</small>
          </div>
-         <div class=\"border-bottom col-md-2 text-right\"><small>".$reply->attributes['created_at']."</small></div>
         ";
         echo $txt ;
     }

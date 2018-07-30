@@ -1,7 +1,6 @@
 <?php
 if(isset($params)){
-    $attr = $params;
-//    dd($attr);
+    $post = $params;
 }
 ?>
 <div class="container mt-5">
@@ -10,7 +9,7 @@ if(isset($params)){
             Title :
         </div>
         <div class="col-md-10">
-            <input type="text" class="form-control" value="<?= $attr['title'] ?>" disabled>
+            <input type="text" class="form-control" value="<?= $post['title'] ?>" disabled>
         </div>
     </div>
 
@@ -19,7 +18,7 @@ if(isset($params)){
             Content :
         </div>
         <div class="col-md-10">
-            <textarea class="form-control"  disabled style="resize: none"><?= $attr['content'] ?></textarea>
+            <textarea class="form-control"  disabled style="resize: none"><?= $post['content'] ?></textarea>
         </div>
     </div>
 
@@ -28,7 +27,7 @@ if(isset($params)){
             Author :
         </div>
         <div class="col-md-10">
-            <p> <?=$attr['user_data']['first_name'] . " " . $attr['user_data']['last_name'] ?> <span> At: <?=$attr['created_at']?> </span></p>
+            <p> <?=$post['user_name']?> <span> At: <?=$post['created_at']?> </span></p>
             <button class="btn btn-primary btn-lg"><a href="<?=route('post/index')?>" style="color: white;">Back</a></button>
         </div>
     </div>
