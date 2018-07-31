@@ -12,7 +12,14 @@ class ReplyesController {
     public function actionCreate()
     {
         $reply = new Replyes();
-//        dd($_POST);
+        $avatar=NULL;
+        if (session_id()=='') {
+            session_start();
+        };
+
+        if (isset($_SESSION['avatar'])) {
+            $avatar = $_SESSION['avatar'];
+        }
         if (Validation::validateComment($_POST['content'])===true){
            $reply->attributes['content']=$_POST['content'];
         } else {
@@ -26,7 +33,7 @@ class ReplyesController {
         $reply->insert();
         $txt = "
          <div class='border pt-2 reply-content mt-2 col-md-11'>
-            <p><img src='images/default-profile.jpg'  alt='default-profile' class='reply-author-pic mr-2'> ".Auth::getFullName()."</p>
+            <p><img src="."'".($avatar===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$avatar)."'"."   alt='default-profile' class='reply-author-pic mr-2'> ".Auth::getFullName()."</p>
            
                 ".$reply->attributes['content']."
                 <small class='float-right'>".$reply->attributes['created_at']."</small>

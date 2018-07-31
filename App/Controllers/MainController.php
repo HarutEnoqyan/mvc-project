@@ -5,14 +5,7 @@ namespace App\Controllers;
 class MainController
 {
     public function actionIndex() {
-        global $pdh;
-        $tables=[];
-        $sql = 'show tables';
-        query($sql);
-        foreach (query($sql) as $row) {
-            $tables[]=$row["Tables_in_".DATABASE_NAME];
-        }
-        view('welcome',$tables);
+        view('welcome');
     }
 
     public function actionLogin() {

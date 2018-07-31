@@ -59,7 +59,7 @@ a:hover {
 }
 
 div.blog-content img.profile-pic {
-    border-radius: 50%;
+    border-radius: 25%;
     width: 4%;
 }
 
@@ -74,7 +74,7 @@ div.comments-list h6.user_name {
 }
 
 img.comment-author-pic {
-    border-radius: 50%;
+    border-radius: 25%;
     width: 4%;
     float: left;
 }
@@ -85,7 +85,7 @@ div.replyes div.reply-content {
 
 
 img.reply-author-pic {
-    border-radius: 50%;
+    border-radius: 25%;
     width: 4%;
     float: left;
 }
@@ -117,6 +117,14 @@ div.post {
 
 #img-upload{
     width: 50%;
+}
+
+#welcome-profile-pic {
+    max-width: 100px;
+}
+
+.thumbnail {
+    min-width: 300px;
 }
 
 

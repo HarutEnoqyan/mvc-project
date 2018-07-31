@@ -24,9 +24,13 @@ class PostController {
                 "posts.created_at as post_created_at",
                 "posts.updated_at as post_updated_at",
                 "posts.user_id as post_user_id",
+                "posts.thumbnail as post_thumbnail",
                 "CONCAT(post_user.first_name, ' ' , post_user.last_name) as post_author",
+                "post_user.avatar as post_author_avatar",
                 "CONCAT(comment_user.first_name, ' ' , comment_user.last_name) as comment_author",
+                "comment_user.avatar as comment_author_avatar",
                 "CONCAT(replyes_user.first_name, ' ' , replyes_user.last_name) as reply_author",
+                "replyes_user.avatar as reply_author_avatar",
                 "comments.content as comment_content",
                 "comments.created_at as comment_created_at",
                 "comments.id as comment_id",
@@ -43,21 +47,11 @@ class PostController {
                 ->doubleJoin('users as replyes_user', 'replyes.user_id', '=', 'replyes_user.id')
                 ->toArray();
 
-//            dd($posts);
 
-
-            $result = [];
-
-//            foreach ($posts as $post) {
-//                $post_id = $posts;
-//            }
-
-
-//        dd($allPosts);
             $data = [];
 
             foreach ($posts as $post) {
-//            $comment    = $comment->attributes;
+
                 $comment_id = $post['comment_id'];
                 $post_id    = $post['post_id'];
 
@@ -67,7 +61,8 @@ class PostController {
                         $data[$post_id]['comments'][$comment_id]['replyes'][] = [
                             'reply_content'     => $post['reply_content'],
                             'reply_author'      => $post['reply_author'],
-                            'reply_created_at'  => $post['reply_created_at']
+                            'reply_created_at'  => $post['reply_created_at'],
+                            'reply_author_avatar' => $post['reply_author_avatar']
                         ];
 
                         continue;
@@ -76,13 +71,15 @@ class PostController {
                     $data[$post_id]['comments'][$comment_id] = [
                         'comment_content' => $post['comment_content'],
                         'comment_author'  => $post['comment_author'],
+                        'comment_author_avatar' => $post['comment_author_avatar'],
                         'comment_date'    => $post['comment_created_at'],
                         'comment_id'      => $post['comment_id'],
                         'replyes'         => !empty($post['reply_content']) ? [
                             [
                                 'reply_content'     => $post['reply_content'],
                                 'reply_author'      => $post['reply_author'],
-                                'reply_created_at'  => $post['reply_created_at']
+                                'reply_created_at'  => $post['reply_created_at'],
+                                'reply_author_avatar' => $post['reply_author_avatar']
                             ]
                         ] : []
                     ];
@@ -95,19 +92,23 @@ class PostController {
                     'post_title'      => $post['post_title'],
                     'post_content'    => $post['post_content'],
                     'post_author'     => $post['post_author'],
+                    'post_author_avatar' => $post['post_author_avatar'],
                     'post_user_id'    => $post['post_user_id'],
                     'post_created_at' => $post['post_created_at'],
                     'post_updated_at' => $post['post_updated_at'],
+                    'post_thumbnail'  => $post['post_thumbnail'],
                     'post_id'         => $post['post_id'],
                     'comments' => [
                         $comment_id => [
                             'comment_content' => $post['comment_content'],
                             'comment_author'  => $post['comment_author'],
+                            'comment_author_avatar' => $post['comment_author_avatar'],
                             'comment_date'    => $post['comment_created_at'],
                             'comment_id'      => $post['comment_id'],
                             'replyes'         => !empty($post['reply_content']) ? [[
                                 'reply_content'     => $post['reply_content'],
                                 'reply_author'      => $post['reply_author'],
+                                'reply_author_avatar' => $post['reply_author_avatar'],
                                 'reply_created_at'  => $post['reply_created_at']
                             ]] : []
                         ]
@@ -131,8 +132,31 @@ class PostController {
     }
 
     public function actionSave() {
-        $posts= new Post();
 
+        function random_string($length) {
+            $key = '';
+            $keys = array_merge(range(0, 9), range('a', 'z'));
+
+            for ($i = 0; $i < $length; $i++) {
+                $key .= $keys[array_rand($keys)];
+            }
+
+            return $key;
+        }
+
+
+        $posts= new Post();
+        $type = $_FILES['uploaded_file']['type'];
+        $tempName = $_FILES['uploaded_file']['tmp_name'];
+        $type = str_replace(substr($type,0,6), ".",$type);
+        if (isset($type)) {
+            if (!empty($type)) {
+                $fileName = random_string(20);
+                $location = 'images/uploads/';
+                move_uploaded_file($tempName , $location.$fileName.$type );
+                $type = str_replace(substr($type,0,6), ".",$type);
+            }
+        }
         $this->uncheckedData['title'] = $_REQUEST['title'];
         $this->uncheckedData['content'] = $_REQUEST['content'];
 
@@ -151,6 +175,9 @@ class PostController {
         if (count($this->validateErrors)===0) {
             $posts->attributes['created_at']=date("Y-m-d H:i:s");
             $posts->attributes['user_id']=Auth::getId();
+            if ($fileName) {
+                $posts->attributes['thumbnail'] = $fileName.$type;
+            }
             $posts->insert();
             redirect(route('post/index'));
         } else {
@@ -182,7 +209,15 @@ class PostController {
     public function actionDelete() {
         $id = $_GET['id'];
         $posts= new Post();
-        $data = $posts->select('user_id')->where("id=$id")->first()->attributes;
+        $data = $posts
+            ->select('thumbnail , user_id')
+            ->where("id=$id")
+            ->first()->attributes;
+        $imgName = $data['thumbnail'];
+        if (file_exists(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$imgName)) {
+            unlink(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$imgName);
+        }
+
         if($data['user_id']==Auth::getId()){
             $posts->where("id = $id")
                   ->delete();

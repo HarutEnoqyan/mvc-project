@@ -21,7 +21,7 @@
 
 
 
-        //        dd($post);
+//                dd($post);
         ?>
     <div class="post border-bottom mb-5 mt-2 pb-2 pt-3" id="post_<?=$post['post_id']?>">
         <div class="row relative">
@@ -44,7 +44,7 @@
                                 </a>
                             </button>
                             <form class="form-inline" id="inlne-form" method="post" action="<?= route('post/delete',['id'=>$post['post_id']])?>" >
-                                <button class=" btn dropdown-item" type="button">
+                                <button class=" btn dropdown-item" type="submit">
                                     Delete
                                 </button>
                             </form>
@@ -59,14 +59,14 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-12"><h2><?=$post['post_title'] ?></h2></div>
-                <img class="ml-2" src="images/blog-default.png" alt="blog-default">
+                <img class="ml-3 thumbnail" src="<?=$post['post_thumbnail'] === null ? 'images/blog-default.png' : 'images/uploads/'.$post['post_thumbnail']?>" alt="blog-default">
             </div>
             <div class="row m-0 mb-2 mt-2 blog-content content_row">
                 <div class="col-md-12 content">
                     <p><?=$post['post_content'] ?></p>
                 </div>
                 <div class="col-md-12">
-                    <div class="p-0 mb-0">Author : <img class="profile-pic" src="images/default-profile.jpg" alt="profile-edfault">  <?=$post['post_author']?> </div>
+                    <div class="p-0 mb-0">Author : <img class="profile-pic" src="<?=$post['post_author_avatar']===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$post['post_author_avatar']?>" alt="profile-edfault">  <?=$post['post_author']?> </div>
                     <p class="p-0 mb-0"><small>Created at: <?=$post['post_created_at'] ?></small></p>
                     <?php
                     if (isset($post['post_updated_at'])){
@@ -86,12 +86,12 @@
             <div class=" ml-4 mt-2 col-md-12 collapse" id="Collapse<?=$post['post_id']?>">
                 <div class="all-post-comments" id="comment<?=$post['post_id']?>">
                     <?php foreach ($post['comments'] as $comment) { ?>
-                        <div class='comments-list border m-2'>
                             <?php if ($count!=0){?>
+                            <div class='comments-list border m-2'>
                                 <div class='media'>
                                     <div class='media-body'>
                                         <div>
-                                            <img src="images/default-profile.jpg"  alt="default-profile" class="comment-author-pic">
+                                            <img src="<?=$comment['comment_author_avatar']===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$comment['comment_author_avatar']?>"  alt="default-profile" class="comment-author-pic">
                                             <h6 class='media-heading user_name'><?= $comment['comment_author']?></h6>
                                         </div>
                                         <small class='float-right'><?= $comment['comment_date']?></small>
@@ -100,7 +100,7 @@
                                             <div class="replyes row ml-3 mr-3" id="rep<?=$comment['comment_id']?>">
                                                 <?php foreach ($comment['replyes'] as $reply) { ?>
                                                     <div class="border pt-2 reply-content mt-2 col-md-11">
-                                                        <p><img src="images/default-profile.jpg"  alt="default-profile" class="reply-author-pic mr-2"> <?=$reply['reply_author']?></p>
+                                                        <p><img src="<?=$reply['reply_author_avatar']===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$reply['reply_author_avatar']?>" alt="default-profile" class="reply-author-pic mr-2"> <?=$reply['reply_author']?></p>
                                                         <?=$reply['reply_content'] ?>
                                                         <small class="float-right"><?=$reply['reply_created_at'] ?></small>
                                                     </div>
@@ -114,7 +114,7 @@
                                             <div class='com-md-12 collapse' id='CollapseReply<?=$comment['comment_id']?>'>
                                                 <div class='form-group row mt-2'>
                                                     <input name='comment_reply' type='text' class=' ml-3 ajax_reply_input form-control col-md-11' placeholder='Reply' data-comment-id='<?=$comment['comment_id']?>' id='reply_id<?=$comment['comment_id']?>' >
-                                                    <button class='btn btn-primary ajax_reply_button' type='button'  data-id='reply_id<?=$comment['comment_id']?>' data-comment-id='<?=$comment['comment_id']?>'>
+                                                    <button class='btn btn-primary ml-1 ajax_reply_button' type='button'  data-id='reply_id<?=$comment['comment_id']?>' data-comment-id='<?=$comment['comment_id']?>'>
                                                         <i class='far fa-edit text-light'></i>
                                                     </button>
                                                 </div>
@@ -122,14 +122,14 @@
                                         </div>
                                     </div>
                                 </div>
-                            <?php } ?>
-                        </div>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
                 </div>
                 <div class="mt-2 ml-4">
                     <div class="form-group row">
                         <input name="comment" type="text" class="ajax_input form-control col-md-11" placeholder="Write a comment" id="id<?=$post['post_id']?>" data-post-id="<?=$post['post_id']?>">
-                        <button class="btn btn-primary ajax_button" type="button" data-post-id="<?=$post['post_id']?>" data-id="id<?=$post['post_id']?>">
+                        <button class="btn ml-1 btn-primary ajax_button" type="button" data-post-id="<?=$post['post_id']?>" data-id="id<?=$post['post_id']?>">
                             <i class="far fa-edit text-light"></i>
                         </button>
                     </div>

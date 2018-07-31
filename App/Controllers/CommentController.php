@@ -15,6 +15,10 @@ class CommentController {
     {
         $this->user_id = Auth::getId();
         $this->post_id = $_POST['post_id'];
+        $avatar = NULL;
+        if (isset($_SESSION['avatar'])) {
+            $avatar = $_SESSION['avatar'];
+        }
         $comment = new Comment();
 
         if (Validation::validateComment($_POST['comment'])===true) {
@@ -36,7 +40,7 @@ class CommentController {
                         <div class='media'>
                             <div class='media-body'>
                                  <div>
-                                    <img src='images/default-profile.jpg'  alt='default-profile' class='comment-author-pic'>
+                                    <img src="."'".($avatar===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$avatar)."'"."  alt='default-profile' class=' comment-author-pic'>
                                     <h6 class='media-heading user_name'>".Auth::getFullName()."</h6>
                                  </div>
                                  <small class='float-right'>" . $comment->attributes['created_at'] . "</small>
@@ -53,7 +57,7 @@ class CommentController {
                                     <div class='com-md-12 collapse' id='CollapseReply".$id."'>
                                         <div class='form-group row mt-2'>
                                             <input name='comment_reply' type='text' class=' ml-3 ajax_reply_input form-control col-md-11' placeholder='Reply' id='reply_id".$id."' data-comment-id='".$id."'>
-                                            <button class='btn btn-primary ajax_reply_button' type='button'  data-id='reply_id".$id."' data-comment-id='".$id."'>
+                                            <button class='btn ml-1 btn-primary ajax_reply_button' type='button'  data-id='reply_id".$id."' data-comment-id='".$id."'>
                                                 <i class='far fa-edit text-light'></i>
                                             </button>
                                         </div>
