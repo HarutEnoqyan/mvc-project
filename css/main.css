@@ -127,5 +127,21 @@ div.post {
     min-width: 300px;
 }
 
+img.thumbnail + form.absolute {
+    top: 51px;
+    left: 22px;
+}
+
+img.thumbnail + form.absolute > button{
+    border: 1px solid white;
+    color: #f5ffe8;
+    background: none;
+}
+
+img.thumbnail + form.absolute > button:hover {
+    color: black;
+    background-color: white;
+}
+
 
 

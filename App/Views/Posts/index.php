@@ -59,7 +59,14 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-12"><h2><?=$post['post_title'] ?></h2></div>
-                <img class="ml-3 thumbnail" src="<?=$post['post_thumbnail'] === null ? 'images/blog-default.png' : 'images/uploads/'.$post['post_thumbnail']?>" alt="blog-default">
+                <img class="ml-3 thumbnail relative" src="<?=$post['post_thumbnail'] === null || $post['post_thumbnail']=='' ? 'images/blog-default.png' : 'images/uploads/'.$post['post_thumbnail']?>" alt="blog-default">
+                <?php if ($post['post_user_id']==\Core\Auth::getId()){?>
+                <form class="form-inline absolute" id="inlne-form" method="post" action="<?= route('post/thumbnail_edit',['id'=>$post['post_id']])?>" >
+                    <button class="btn" type="submit">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                </form>
+                <?php }?>
             </div>
             <div class="row m-0 mb-2 mt-2 blog-content content_row">
                 <div class="col-md-12 content">
@@ -81,7 +88,7 @@
         </div>
         <div class="col-md-12">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#Collapse<?=$post['post_id']?>" aria-expanded="false" aria-controls="collapseExample">
-                <?=$count." "?> <?=$count==1?'Comment' : 'Comments'?> <span class="comments-count"></span>
+                <span class="comments-count"><?=$count." "?></span> <?=$count==1?'Comment' : 'Comments'?>
             </button>
             <div class=" ml-4 mt-2 col-md-12 collapse" id="Collapse<?=$post['post_id']?>">
                 <div class="all-post-comments" id="comment<?=$post['post_id']?>">
@@ -95,7 +102,7 @@
                                             <h6 class='media-heading user_name'><?= $comment['comment_author']?></h6>
                                         </div>
                                         <small class='float-right'><?= $comment['comment_date']?></small>
-                                        <div class="comment_content">
+                                        <div class="comment_content ml-5">
                                             <?= $comment['comment_content']?>
                                             <div class="replyes row ml-3 mr-3" id="rep<?=$comment['comment_id']?>">
                                                 <?php foreach ($comment['replyes'] as $reply) { ?>

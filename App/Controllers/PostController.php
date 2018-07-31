@@ -287,6 +287,71 @@ class PostController {
 
     }
 
+
+    public function actionThumbnail_edit ()
+    {
+        $id = $_GET['id'];
+        $posts = new Post();
+
+        $post = $posts
+            ->where("id = $id")
+            ->first()->attributes;
+        $data = $posts
+            ->select('posts.*, users.id as user_id, users.first_name, users.last_name')
+            ->join('users', 'users.id',  '=', 'posts.user_id')
+            ->where("posts.id = $id")
+            ->first()->attributes;
+
+        $post['user_data']=$data;
+        if($data['user_id']==Auth::getId()){
+            view("Posts/thumbnail_edit", $post );
+        }else {
+            redirect(route('post/index'));
+        }
+    }
+
+    public function actionThumbnail_update()
+    {
+        $id = $_GET['id'];
+        $posts= new Post();
+
+        function random_string($length) {
+            $key = '';
+            $keys = array_merge(range(0, 9), range('a', 'z'));
+
+            for ($i = 0; $i < $length; $i++) {
+                $key .= $keys[array_rand($keys)];
+            }
+
+            return $key;
+        }
+
+        $type = $_FILES['uploaded_file']['type'];
+        $tempName = $_FILES['uploaded_file']['tmp_name'];
+        $type = str_replace(substr($type,0,6), ".",$type);
+        if (isset($type)) {
+            if (!empty($type)) {
+                $fileName = random_string(20);
+                $location = 'images/uploads/';
+                move_uploaded_file($tempName , $location.$fileName.$type );
+            }
+        }
+
+        if ($fileName) {
+            $thumbnail = $fileName.$type;
+        }
+
+        $oldFile = $posts->where("id=$id")->select('thumbnail')->first()->attributes['thumbnail'];
+        if (file_exists(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$oldFile)) {
+            unlink(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$oldFile);
+        }
+
+        $posts->where("id=$id")
+            ->set(['thumbnail'],[$thumbnail])
+            ->update();
+        redirect(route('post/index'));
+    }
+
     public function actionTest()
     {
         dd(Validation::validateDate("2018.07-19 10:32:44"));

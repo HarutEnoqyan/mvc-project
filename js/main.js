@@ -4,7 +4,8 @@ $(document).ready(function () {
         post_id = 0;
     $(document).on('click','.ajax_button', function (event) {
         input_id = $(this).attr('data-id');
-        post_id = $(this).attr('data-post-id')
+        post_id = $(this).attr('data-post-id');
+        count = $("button[data-target='#Collapse'+input_id] > span");
         getVal(input_id);
 
         $.ajax({
@@ -98,8 +99,6 @@ $(document).ready(function () {
     function getVal(id) {
         comment = $('input#' + id).val();
         $('input#' + id).val('');
-        // consolelog([post_id,comment]);
-        // consolelog([post_id,comment]);
 
     }
 
