@@ -148,13 +148,12 @@ class PostController {
         $posts= new Post();
         $type = $_FILES['uploaded_file']['type'];
         $tempName = $_FILES['uploaded_file']['tmp_name'];
-        $type = str_replace(substr($type,0,6), ".",$type);
         if (isset($type)) {
             if (!empty($type)) {
                 $fileName = random_string(20);
                 $location = 'images/uploads/';
-                move_uploaded_file($tempName , $location.$fileName.$type );
                 $type = str_replace(substr($type,0,6), ".",$type);
+                move_uploaded_file($tempName , $location.$fileName.$type );
             }
         }
         $this->uncheckedData['title'] = $_REQUEST['title'];

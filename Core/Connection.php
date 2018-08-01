@@ -6,7 +6,7 @@ use PDO;
 
 class Connection
 {
-    public function init()
+    public static function init()
     {
         global $pdh;
         try {

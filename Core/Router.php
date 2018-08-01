@@ -3,7 +3,7 @@
 namespace Core;
 
 class Router {
-    public function init()
+    public static function init()
     {
         $route = 'main/index';
         if (!empty($_GET['route'])) {

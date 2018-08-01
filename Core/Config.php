@@ -1,8 +1,8 @@
 <?php
 namespace Core;
 
-class Congif {
-    public function init()
+class Config {
+    public static function init()
     {
         $configurations = require_once BASE_PATH . '\\DBConfig\\configs.php';
         define("DATABASE_HOST",$configurations['database']['host']);

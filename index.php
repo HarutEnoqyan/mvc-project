@@ -4,16 +4,10 @@ require_once 'autoload.php';
 
 $pdh = null;
 
-$conn = new \Core\Connection();
-$config = new Core\Congif();
-$route = new Core\Router();
-//$migrate = new \Core\Migration();
-$config->init();
-$conn->init();
-$route->init();
-//$migrate-
+\Core\Config::init();
+\Core\Connection::init();
+\Core\Router::init();
 
-//dd($pdh);
 
 
 
