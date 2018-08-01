@@ -1,5 +1,7 @@
 <?php
  namespace Core;
+ use PDO;
+
 
 
 class ORM
@@ -85,6 +87,8 @@ class ORM
             }
         }
         global $pdh;
+        /** @var PDO $pdh */
+
 
         $statement = $pdh->query($query);
 //        dd($statement);
@@ -175,9 +179,13 @@ class ORM
 
     public function insert()
     {
+        /** @var PDO $pdh */
+
+
         global $pdh;
         $fields = implode(', ', array_keys($this->attributes));
         $values = implode(', ', array_map(function($item) use ($pdh) {
+
             return $pdh->quote($item);
         }, $this->attributes));
         $tableName = $this->getTable();

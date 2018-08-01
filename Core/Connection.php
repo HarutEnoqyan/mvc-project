@@ -13,8 +13,8 @@ class Connection
             $pdh = new PDO('mysql:host=' . DATABASE_HOST . ';dbname=' . DATABASE_NAME, DATABASE_USER, DATABASE_PASS);
 //            dd($pdh);
 //            echo "connection success";
-        } catch (PDOException $e) {
-            show_error($e->getMessage());
+        } catch (\PDOException $e) {
+          dd($e->getMessage());
         }
     }
 }

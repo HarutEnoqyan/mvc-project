@@ -19,6 +19,11 @@ class UserController
     public  function actionCreate() {
         $user = new User();
         $token = md5(rand());
+        $first_name = '';
+        $last_name = '';
+        $age = '';
+        $password='';
+        $fileName='';
         $unchekedValues = [
             'name' => $_POST['first_name'],
             'last_name' => $_POST['last_name'],
@@ -125,6 +130,8 @@ class UserController
     }
 
     public function actionCheck() {
+        $email='';
+        $password='';
         $unchekedValues = [
             'email' => $_POST['email'],
             'password' => $_POST['password']

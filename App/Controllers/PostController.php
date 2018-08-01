@@ -174,7 +174,7 @@ class PostController {
         if (count($this->validateErrors)===0) {
             $posts->attributes['created_at']=date("Y-m-d H:i:s");
             $posts->attributes['user_id']=Auth::getId();
-            if ($fileName) {
+            if (isset($fileName)) {
                 $posts->attributes['thumbnail'] = $fileName.$type;
             }
             $posts->insert();
@@ -194,7 +194,6 @@ class PostController {
         $posts= new Post();
 
         $data = $posts
-//            ->where("id = $id")
             ->select("posts.*, CONCAT(users.first_name,"."' "."'".",users.last_name) as user_name")
             ->join('users', 'users.id',  '=', "posts.user_id where posts.id=$id")
             ->first()->attributes;
@@ -335,8 +334,9 @@ class PostController {
                 move_uploaded_file($tempName , $location.$fileName.$type );
             }
         }
+        $thumbnail='';
 
-        if ($fileName) {
+        if (isset($fileName)) {
             $thumbnail = $fileName.$type;
         }
 
@@ -344,6 +344,7 @@ class PostController {
         if (file_exists(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$oldFile)) {
             unlink(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$oldFile);
         }
+
 
         $posts->where("id=$id")
             ->set(['thumbnail'],[$thumbnail])

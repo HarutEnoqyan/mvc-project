@@ -8,16 +8,16 @@ if (session_id()=='') {
 <div class="container mt-5">
     <form action="<?=route('post/save')?>" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label>Upload Image</label>
+            <label for="inputId">Upload Image</label>
             <div class="input-group">
             <span class="input-group-btn">
                 <span class="btn btn-success btn-file">
                     Browse… <input type="file" id="imgInp" name="uploaded_file">
                 </span>
             </span>
-                <input  type="text" class="form-control" readonly>
+                <input id="inputId" type="text" class="form-control" readonly>
             </div>
-            <img id='img-upload'/>
+            <img id='img-upload' src="">
         </div>
         <div class="form-group">
             <label for="title">Title</label>

@@ -5,6 +5,7 @@ use \Core\ORM;
 \Core\Config::init();
 \Core\Connection::init();
 
+
 class Migration extends ORM {
 
     public function migrate()
@@ -18,6 +19,8 @@ class Migration extends ORM {
         $result = query($sql);
         // if does not exist create the table
         if (count($result)===0) {
+            /** @var PDO $pdh */
+
 
             $sql = "CREATE TABLE migrations (id int(11) AUTO_INCREMENT NOT NULL PRIMARY KEY, name varchar(50), date datetime)";
             $success = $pdh->query($sql);
@@ -68,6 +71,8 @@ class Migration extends ORM {
 
     public function migrateFresh()
     {
+        /** @var PDO $pdh */
+
         global $pdh;
         $sql = "SHOW TABLES";
         $result = $pdh->query($sql);
@@ -109,6 +114,8 @@ class Migration extends ORM {
 
     public function createMigration ()
     {
+        /** @var PDO $pdh */
+
         global $argv;
         global $pdh;
 

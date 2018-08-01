@@ -29,6 +29,8 @@ class Auth {
         if ($_SESSION && isset($_SESSION['id'])){
             return $_SESSION['id'];
         }
+        return false;
+
     }
 
     public static function getFullName() {
@@ -37,14 +39,13 @@ class Auth {
         }
         if ($_SESSION && isset($_SESSION['id'])){
             $id = $_SESSION['id'];
+            $user = new User();
+            $person =  $user->where("id = $id")->first();
+            $first_name = $person->attributes['first_name'];
+            $last_name = $person->attributes['last_name'];
+            return $first_name . ' ' . $last_name;
         }
-
-        $user = new User();
-        $person =  $user->where("id = $id")->first();
-        $first_name = $person->attributes['first_name'];
-        $last_name = $person->attributes['last_name'];
-        return $first_name . ' ' . $last_name;
-
+        return false;
 
     }
 

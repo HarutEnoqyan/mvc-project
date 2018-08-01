@@ -18,10 +18,6 @@
             }
         }
 
-
-
-
-//                dd($post);
         ?>
     <div class="post border-bottom mb-5 mt-2 pb-2 pt-3" id="post_<?=$post['post_id']?>">
         <div class="row relative">
@@ -90,7 +86,7 @@
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#Collapse<?=$post['post_id']?>" aria-expanded="false" aria-controls="collapseExample">
                 <span class="comments-count"><?=$count." "?></span> <?=$count==1?'Comment' : 'Comments'?>
             </button>
-            <div class=" ml-4 mt-2 col-md-12 collapse" id="Collapse<?=$post['post_id']?>">
+            <div class=" ml-4 col-md-12 collapse" id="Collapse<?=$post['post_id']?>">
                 <div class="all-post-comments" id="comment<?=$post['post_id']?>">
                     <?php foreach ($post['comments'] as $comment) { ?>
                             <?php if ($count!=0){?>
@@ -143,7 +139,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
         <?php
 
