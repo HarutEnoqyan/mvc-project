@@ -2,7 +2,9 @@
 namespace App\Controllers;
 use App\Models\Comment;
 use Core\Auth;
+use Core\ORM;
 use Core\Validation;
+
 
 class CommentController {
     protected $validateErrors = [];
@@ -13,6 +15,10 @@ class CommentController {
     {
         $this->user_id = Auth::getId();
         $this->post_id = $_POST['post_id'];
+        $avatar = NULL;
+        if (isset($_SESSION['avatar'])) {
+            $avatar = $_SESSION['avatar'];
+        }
         $comment = new Comment();
 
         if (Validation::validateComment($_POST['comment'])===true) {
@@ -26,31 +32,47 @@ class CommentController {
             $comment->attributes['user_id']=$this->user_id;
             $comment->attributes['post_id']=$this->post_id;
             $comment->insert();
-            $txt = "   <div class='comments-list border-bottom'>
-                           <div class='media'>
-                               <a class='media-left' href='#'>
-                                   <!--                                <img src=\"http://lorempixel.com/40/40/people/1/\">-->
-                               </a>
-                               <div class='media-body'>
+            $id = $comment->where("created_at="."'".$comment->attributes['created_at']."'"."")->first()->attributes['id'];
 
-                                   <h4 class='media-heading user_name'> ". Auth::getFullName() ." </h4>
-                                   ". $comment->attributes['content'] ."
-                                   <small class='float-right'>". $comment->attributes['created_at'] ."</small>
-                                   <p><small><a href=''>Reply</a></small></p>
-                               </div>
-                           </div>
-                       </div>";
+            $txt =
+             "
+                <div class='comments-list border m-2'>
+                        <div class='media'>
+                            <div class='media-body'>
+                                 <div>
+                                    <img src="."'".($avatar===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$avatar)."'"."  alt='default-profile' class=' comment-author-pic'>
+                                    <h6 class='media-heading user_name'>".Auth::getFullName()."</h6>
+                                 </div>
+                                 <small class='float-right'>" . $comment->attributes['created_at'] . "</small>
+
+                                <div class='comment_content'>
+                                    ".$comment->attributes['content']." 
+                                    <div class='replyes row ml-3 mr-3' id="."'rep".$id."'".">
+                                    </div>
+                                </div>
+                                <div id="."'reply".$id."'"." class='col-md-10'>
+                                    <button class='btn btn-primary btn-sm' type='button' data-toggle='collapse' data-target='".'#'."CollapseReply".$id."' aria-expanded='false' aria-controls='collapseExample'>
+                                        <small>Reply</small>
+                                    </button>
+                                    <div class='com-md-12 collapse' id='CollapseReply".$id."'>
+                                        <div class='form-group row mt-2'>
+                                            <input name='comment_reply' type='text' class=' ml-3 ajax_reply_input form-control col-md-11' placeholder='Reply' id='reply_id".$id."' data-comment-id='".$id."'>
+                                            <button class='btn ml-1 btn-primary ajax_reply_button' type='button'  data-id='reply_id".$id."' data-comment-id='".$id."'>
+                                                <i class='far fa-edit text-light'></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>";
             echo json_encode($txt);
         }
     }
 
     public static function actionShow()
     {
-        $comments = new Comment();
-        $allCommetns =  $comments
-            ->select('comments.*, users.first_name, users.last_name')
-            ->join('users', 'users.id',  '=', 'comments.user_id')
-            ->get();
-        return $allCommetns;
+
     }
+
 }

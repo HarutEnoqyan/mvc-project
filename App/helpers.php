@@ -2,9 +2,7 @@
 
  function dd($arg)
 {
-    echo "<pre>";
-    var_dump($arg);
-    echo "</pre>";
+    highlight_string("<?php\n\$data =\n" . var_export($arg, true) . ";\n?>");
     die();
 }
 
@@ -24,6 +22,8 @@ function view($viewName , $params = []) {
 function query($sql, $params = [])
 {
     global $pdh;
+//    dd($sql);
+
     $statement = $pdh->prepare($sql);
     if (!$statement) {
         show_error($pdh->errorInfo()[2]);

@@ -13,7 +13,7 @@ class UserController
     public $oldValues = [];
 
     public function actionIndex(){
-        view('//user//welcome');
+        view("//user//welcome");
     }
 
     public  function actionCreate() {
@@ -58,7 +58,33 @@ class UserController
                 $this->validationErrors['password']=Validation::validatePass($_POST['password']);
             }
 
+            function random_string($length) {
+                $key = '';
+                $keys = array_merge(range(0, 9), range('a', 'z'));
+
+                for ($i = 0; $i < $length; $i++) {
+                    $key .= $keys[array_rand($keys)];
+                }
+
+                return $key;
+            }
+
+            $type = $_FILES['avatar']['type'];
+            $tempName = $_FILES['avatar']['tmp_name'];
+
+
             if (count($this->validationErrors)===0){
+
+                if (isset($type)) {
+                    if (!empty($type)) {
+                        $type = str_replace(substr($type,0,6), ".",$type);
+                        $fileName = random_string(20);
+                        $location = 'images/uploads/';
+                        move_uploaded_file($tempName , $location.$fileName.$type );
+                    }
+                }
+
+
                 $created_at =date("Y-m-d H:i:s");
                 $user->attributes['first_name']=$first_name;
                 $user->attributes['last_name']=$last_name;
@@ -67,7 +93,10 @@ class UserController
                 $user->attributes['password']=$password;
                 $user->attributes['token']=$token;
                 $user->attributes['created_at']=$created_at;
-                $user->insert();
+                if ($fileName) {
+                    $user->attributes['avatar']=$fileName.$type;
+                }
+                    $user->insert();
 
                 $userName = $first_name;
                 $userId = $user->select('id')->where("email="."'".$email."'"." ")->first()->attributes['id'];
@@ -75,7 +104,10 @@ class UserController
                 $_SESSION['token']=$token;
                 $_SESSION['id']=$userId;
                 $_SESSION['name']=$userName;
-                header("Location: ".route('user/Index' )." ");
+                if ($fileName) {
+                    $_SESSION['avatar']=$fileName.$type;
+                }
+                redirect(route('user/Index' ));
             } else {
                 if (count($this->validationErrors) > 0) {
                     session_start();
@@ -117,16 +149,19 @@ class UserController
         if (count($this->validationErrors)==0){
             $users = new User;
             $user = $users->where("email=$email")->first()->attributes;
+//            dd($user);
             if (isset($user) && $user['password']===$password){
                 $token = md5(rand());
                 $userId = $user['id'];
                 $userName = $user['first_name'];
+                $avatar = $user['avatar'];
                 session_start();
                 $_SESSION['token']=$token;
                 $_SESSION['id']=$userId;
                 $_SESSION['name']=$userName;
+                $_SESSION['avatar']=$avatar;
                 $this->updateToken($userId,$token);
-                redirect(route('main/index'));
+                redirect(route('user/index' ));
             } else {
                 session_start();
                 $_SESSION['old'] = $unchekedValues;

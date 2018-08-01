@@ -20,6 +20,10 @@ class ORM
 
     protected $join;
 
+    protected $from;
+
+    protected $selectFrom;
+
     protected $show;
 
     protected $table;
@@ -49,11 +53,23 @@ class ORM
         } else {
             $query .= " * ";
         }
-        $query .= " FROM " . $this->getTable();
+
+        if ($this->table){
+            $query.= " FROM " . $this->table;
+        }else{
+            $query .= " FROM " . $this->getTable();
+        }
+
+
+
+        if($this->from) {
+            $query .= $this->from;
+        }
 
         if ($this->join) {
             $query .= $this->join;
         }
+
         if ($this->where) {
             $query .= " WHERE " . $this->where;
         }
@@ -69,12 +85,14 @@ class ORM
             }
         }
         global $pdh;
-//        dd($query);
+
         $statement = $pdh->query($query);
 //        dd($statement);
+//        dd($query);
         if (!$statement) {
             echo "\nPDO::errorInfo():\n";
             print_r($pdh->errorInfo());
+            dd($query);
         }
         return $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
     }
@@ -95,6 +113,20 @@ class ORM
         return $this->execute();
     }
 
+
+    public function toArray()
+    {
+        $execute = $this->execute();
+
+        $result = [];
+
+        foreach ($execute as $data) {
+            $result[] = $data->attributes;
+        }
+
+        return $result;
+    }
+
     public function first()
     {
         $this->limit(1);
@@ -108,6 +140,12 @@ class ORM
     public function select($columns)
     {
         $this->select = $columns;
+        return $this;
+    }
+
+    public function doubleSelect($columns)
+    {
+        $this->select .= $columns;
         return $this;
     }
 
@@ -177,7 +215,13 @@ class ORM
     }
 
     public function join($to, $with, $operator = "=", $onWith){
-        $this->join= " JOIN $to ON $with $operator $onWith ;";
+        $this->join = " LEFT JOIN $to ON $with $operator $onWith ";
+        return $this;
+    }
+
+    public function doubleJoin($to, $with, $operator = "=", $onWith)
+    {
+        $this->join .= " LEFT JOIN $to ON $with $operator $onWith ";
         return $this;
     }
 
@@ -187,6 +231,17 @@ class ORM
         return query($sql);
     }
 
+
+    public function from($table, $as = '')
+    {
+        if(is_callable($table)) {
+            return $table($this);
+        }
+
+        $this->from = '(SELECT ' . $this->selectFrom    . ' FROM ' . $table . $this->join . ') as ' . $as;
+
+        return $this;
+    }
 
 
 

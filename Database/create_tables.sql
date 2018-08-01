@@ -31,5 +31,16 @@ CREATE TABLE comments (
 
 );
 
+CREATE TABLE replyes (
+  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  comment_id INT(11) NOT NULL ,
+  user_id INT(11) NOT NULL ,
+  content VARCHAR(255) NOT NULL ,
+  created_at DATETIME,
+  updated_at DATETIME,
+  FOREIGN KEY (comment_id) REFERENCES comments(id) ON UPDATE CASCADE ON DELETE NO ACTION ,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE NO ACTION
+);
+
 INSERT INTO users(first_name, last_name, date_of_birth, email, password, created_at, updated_at)
     VALUES ('Harut','Enoqyan','22.08.91','harut.enoqyan87@gmail.com','secret' , date("Y-m-d H:i:s") , date("Y-m-d H:i:s"));

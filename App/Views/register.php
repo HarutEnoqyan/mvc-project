@@ -6,7 +6,7 @@ if (session_id()=='') {
 
 <div class="">
     <h1 class="h3 mb-3 font-weight-normal text-center">Registration</h1>
-    <form action="<?=route('user/create')?>" method="post" class="form-signin">
+    <form action="<?=route('user/create')?>" method="post" class="form-signin" enctype="multipart/form-data">
         <div class="form-group">
             <label for="first_name" >Name</label>
             <input name="first_name" id="first_name" type="text" value="<?=isset($_SESSION['old']['name'])=== true ?  $_SESSION['old']['name']  : ''?>" class="form-control <?=isset($_SESSION['errors']['name'])=== true ?  'is-invalid'  : ''?> " placeholder="Name">
@@ -29,6 +29,11 @@ if (session_id()=='') {
             <label for="age" >Dare Of Birth</label>
             <input id="age" type="date" name="age" value="<?=isset($_SESSION['old']['age'])=== true ?  $_SESSION['old']['age']  : ''?>"  class="form-control <?=isset($_SESSION['errors']['age'])=== true ?  'is-invalid'  : ''?>" placeholder="Date Of Birth">
             <span class="text-danger"><?=isset($_SESSION['errors']['age'])=== true ? $_SESSION['errors']['age'] : ''?></span>
+        </div>
+
+        <div class="form-group">
+            <label for="avatar" >Avatar</label>
+            <input id="avatar" type="file" name="avatar" class="form-control >
         </div>
 
         <div class="form-group">
