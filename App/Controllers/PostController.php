@@ -146,16 +146,25 @@ class PostController {
 
 
         $posts= new Post();
-        $type = $_FILES['uploaded_file']['type'];
-        $tempName = $_FILES['uploaded_file']['tmp_name'];
-        if (isset($type)) {
-            if (!empty($type)) {
-                $fileName = random_string(20);
-                $location = 'images/uploads/';
-                $type = str_replace(substr($type,0,6), ".",$type);
-                move_uploaded_file($tempName , $location.$fileName.$type );
+        $images = [];
+//        var_dump($_FILES);die();
+        if ($_FILES) {
+            for ($i = 0 ; $i < count($_FILES['images']['type']); $i++) {
+                $type = $_FILES['images']['type'][$i];
+                $tempName = $_FILES['images']['tmp_name'][$i];
+                if (isset($type)) {
+                    if (!empty($type)) {
+                        $fileName = random_string(20);
+                        $location = 'images/uploads/';
+                        $type = str_replace(substr($type,0,6), ".",$type);
+                        move_uploaded_file($tempName , $location.$fileName.$type );
+                        $images[]=$fileName.$type;
+                    }
+                }
             }
         }
+//        dd($images);
+
         $this->uncheckedData['title'] = $_REQUEST['title'];
         $this->uncheckedData['content'] = $_REQUEST['content'];
 
@@ -174,16 +183,17 @@ class PostController {
         if (count($this->validateErrors)===0) {
             $posts->attributes['created_at']=date("Y-m-d H:i:s");
             $posts->attributes['user_id']=Auth::getId();
-            if (isset($fileName)) {
-                $posts->attributes['thumbnail'] = $fileName.$type;
+            if (count($images)>0) {
+                $posts->attributes['thumbnail'] = implode(',', $images);
             }
             $posts->insert();
-            redirect(route('post/index'));
+            echo "true";
         } else {
             session_start();
             $_SESSION['old'] = $this->uncheckedData;
             $_SESSION['errors'] = $this->validateErrors;
-            redirect(route('post/create'));
+            echo json_encode(['errors' => $this->validateErrors]);
+//            redirect(route('post/create'));
         }
 
 
@@ -211,11 +221,12 @@ class PostController {
             ->select('thumbnail , user_id')
             ->where("id=$id")
             ->first()->attributes;
-        $imgName = $data['thumbnail'];
-        if (file_exists(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$imgName)) {
-            unlink(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$imgName);
+        $images = explode(',',$data['thumbnail']);
+        foreach ($images as $image ) {
+            if (file_exists(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$image)) {
+                unlink(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$image);
+            }
         }
-
         if($data['user_id']==Auth::getId()){
             $posts->where("id = $id")
                   ->delete();
@@ -310,7 +321,7 @@ class PostController {
 
     public function actionThumbnail_update()
     {
-        $id = $_GET['id'];
+        $id = $_POST['id'];
         $posts= new Post();
 
         function random_string($length) {
@@ -324,32 +335,44 @@ class PostController {
             return $key;
         }
 
-        $type = $_FILES['uploaded_file']['type'];
-        $tempName = $_FILES['uploaded_file']['tmp_name'];
-        $type = str_replace(substr($type,0,6), ".",$type);
-        if (isset($type)) {
-            if (!empty($type)) {
-                $fileName = random_string(20);
-                $location = 'images/uploads/';
-                move_uploaded_file($tempName , $location.$fileName.$type );
+        $images = [];
+        if (count($_FILES['images']['type'])>0) {
+            for ($i = 0 ; $i < count($_FILES['images']['type']); $i++) {
+                $type = $_FILES['images']['type'][$i];
+                $tempName = $_FILES['images']['tmp_name'][$i];
+                if (isset($type)) {
+                    if (!empty($type)) {
+                        $fileName = random_string(20);
+                        $location = 'images/uploads/';
+                        $type = str_replace(substr($type,0,6), ".",$type);
+                        move_uploaded_file($tempName , $location.$fileName.$type );
+                        $images[]=$fileName.$type;
+                    }
+                }
             }
         }
-        $thumbnail='';
 
-        if (isset($fileName)) {
-            $thumbnail = $fileName.$type;
+        if (count($images)>0) {
+            $thumbnail = implode(',' , $images);
+        } else {
+            $thumbnail = '';
         }
 
-        $oldFile = $posts->where("id=$id")->select('thumbnail')->first()->attributes['thumbnail'];
-        if (file_exists(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$oldFile)) {
-            unlink(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$oldFile);
+        $oldFiles = explode(',' , $posts->where("id=$id")->select('thumbnail')->first()->attributes['thumbnail']);
+        if (count($oldFiles) > 0) {
+            foreach ($oldFiles as $oldFile) {
+                if (file_exists(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$oldFile)) {
+                    unlink(BASE_PATH.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.$oldFile);
+                }
+            }
         }
+
 
 
         $posts->where("id=$id")
             ->set(['thumbnail'],[$thumbnail])
             ->update();
-        redirect(route('post/index'));
+        echo "true";
     }
 
     public function actionTest()

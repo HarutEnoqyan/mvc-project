@@ -7,27 +7,23 @@ if (isset($params)) {
 }
 ?>
     <div class="container mt-5">
-
-        <form action="<?=route('post/thumbnail_update' , ['id'=>$attr['id']])?>" method="post" enctype="multipart/form-data">
+        <form action=""  enctype="multipart/form-data">
             <div class="form-group">
-                <label>Upload Image</label>
+                <label for="inputId">Upload Image</label>
                 <div class="input-group">
             <span class="input-group-btn">
                 <span class="btn btn-success btn-file">
-                    Browse… <input type="file" id="imgInp" name="uploaded_file">
+                    Browse… <input type="file" id="imgInp" name="uploaded_file[]" multiple>
                 </span>
             </span>
-                    <input  type="text" class="form-control" readonly>
+                    <input id="inputId" type="text" class="form-control" readonly>
                 </div>
-                <img id='img-upload'/>
+                <div class="upload-image-group row">
+                </div>
             </div>
-            <button type="submit" class="btn btn-success btn-lg">Save</button>
+
+            <button type="button" data-id="<?=$attr['id']?>" id="post-edit-btn" class="btn btn-success btn-lg">Save</button>
         </form>
-
-
-
-
-
     </div>
 <?php
 unset($_SESSION['errors']);

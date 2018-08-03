@@ -143,5 +143,31 @@ img.thumbnail + form.absolute > button:hover {
     background-color: white;
 }
 
+div.upload_image {
+    height: 150px;
+    overflow: hidden;
+}
+
+div.upload_image:hover span {
+    opacity: 1;
+}
+
+div.upload_image img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+div.upload_image span {
+    width: 25px;
+    height: 25px;
+    line-height: 10px;
+    padding-left: 9px;
+    right: 17px;
+    top: 10px;
+    opacity: 0;
+    transition: 0.3s ease;
+}
+
 
 

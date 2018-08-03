@@ -10,6 +10,8 @@
 //    dd($params);
     foreach ($params as $post) {
         $count = 0;
+        $post['post_thumbnail'] = explode(',', $post['post_thumbnail']);
+
         foreach ($post['comments'] as $comment){
             if ($comment['comment_content']===NULL){
                 $comment=[];
@@ -55,8 +57,11 @@
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-12"><h2><?=$post['post_title'] ?></h2></div>
-                <img class="ml-3 thumbnail relative" src="<?=$post['post_thumbnail'] === null || $post['post_thumbnail']=='' ? 'images/blog-default.png' : 'images/uploads/'.$post['post_thumbnail']?>" alt="blog-default">
-                <?php if ($post['post_user_id']==\Core\Auth::getId()){?>
+                <?php foreach ($post['post_thumbnail'] as $image) {?>
+                    <img class="ml-3 thumbnail relative" src="<?=$image=== null || $image=='' ? 'images/blog-default.png' : 'images/uploads/'.$image?>" alt="blog-default">
+                <?php }
+
+                if ($post['post_user_id']==\Core\Auth::getId()){?>
                 <form class="form-inline absolute" id="inlne-form" method="post" action="<?= route('post/thumbnail_edit',['id'=>$post['post_id']])?>" >
                     <button class="btn" type="submit">
                         <i class="fas fa-pencil-alt"></i>
