@@ -6,8 +6,6 @@ class Validation {
     public static function validateName($str)
     {
         $str = trim($str);
-//        dd(strlen($str));
-//        echo $str;
 
         if ($str && $str !='' && strlen($str)>=3 && strlen($str)<=15 && preg_match('/^[a-z]+$/i' , $str )) {
             return true;
@@ -85,7 +83,6 @@ class Validation {
 
     }
 
-    //dateTime regexp "/(\d{4}(.|\/|-|:)\d{2}(.|\/|-|:)\d{2} \d{2}(.|\/|-|:)\d{2}(.|\/|-|:)\d{2})/i"
 
     public static function validateDate($str)
     {

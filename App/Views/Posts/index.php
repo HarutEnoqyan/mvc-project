@@ -29,7 +29,7 @@
 
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <button class=" btn dropdown-item" type="button">
-                            <a class="text-dark" href="<?= route('post/show' , ['id'=>$post['post_id']])?>">
+                            <a class="text-dark" href="<?= route('post/show.php' , ['id'=>$post['post_id']])?>">
                                 Show
                             </a
                         </button>

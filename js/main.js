@@ -58,7 +58,6 @@ $(document).ready(function () {
             type: 'POST',
             data: 'comment_id='+comment_id+'&content='+comment,
             success: function(result){
-                console.log(result);
                 $('div#rep'+comment_id).append(result);
 
 
@@ -82,7 +81,6 @@ $(document).ready(function () {
                 type: 'POST',
                 data: 'comment_id='+comment_id+'&content='+comment,
                 success: function(result){
-                    console.log(result);
                     $('div#rep'+comment_id).append(result);
 
 
@@ -121,7 +119,6 @@ $(document).ready(function () {
             for (var i = 0; i<file.length; i++){
                 if ($.inArray(file[i] , this.files) === -1){
                     this.files.push(file[i]);
-
                 }
                 if ($.inArray(file[i]['name'] , this.fileNames) === -1){
                     this.fileNames.push(file[i]['name']);
@@ -245,7 +242,6 @@ $(document).ready(function () {
 
     $(document).on('click','#post-edit-btn', function () {
         id = $(this).attr('data-id');
-        console.log(id);
         upload.formData.append('id' , id);
         upload.initFileList();
 
@@ -258,7 +254,6 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function(result){
-                console.log(upload.files);
                 // for (var pair of upload.formData.entries()) {
                 //     console.log(pair[0]+ ', ' + pair[1]);
                 // }

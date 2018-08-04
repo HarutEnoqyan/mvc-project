@@ -235,7 +235,7 @@ class ORM
 
     public function showColumns()
     {
-        $sql = "show columns FROM $this->table ;";
+        $sql = "show.php columns FROM $this->table ;";
         return query($sql);
     }
 

@@ -210,7 +210,7 @@ class PostController {
 
 
 
-        view("Posts/show", $data );
+        view("Posts/show.php", $data );
 
     }
 
@@ -302,18 +302,14 @@ class PostController {
         $id = $_GET['id'];
         $posts = new Post();
 
-        $post = $posts
-            ->where("id = $id")
-            ->first()->attributes;
         $data = $posts
-            ->select('posts.*, users.id as user_id, users.first_name, users.last_name')
+            ->select('posts.*, users.id as user_id, CONCAT(users.first_name, " " ,users.last_name) as user_name')
             ->join('users', 'users.id',  '=', 'posts.user_id')
             ->where("posts.id = $id")
             ->first()->attributes;
 
-        $post['user_data']=$data;
         if($data['user_id']==Auth::getId()){
-            view("Posts/thumbnail_edit", $post );
+            view("Posts/thumbnail_edit", $data );
         }else {
             redirect(route('post/index'));
         }

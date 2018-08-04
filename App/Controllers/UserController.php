@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\User;
 use Core\Auth;
 use Core\Validation;
+use App\Controllers\FriendController;
 
 
 
@@ -168,6 +169,8 @@ class UserController
                 $_SESSION['name']=$userName;
                 $_SESSION['avatar']=$avatar;
                 $this->updateToken($userId,$token);
+                $friends = \App\Controllers\FriendController::initFriends();
+                $_SESSION['friends'] = $friends;
                 redirect(route('user/index' ));
             } else {
                 session_start();
@@ -190,8 +193,22 @@ class UserController
         $user->where("id = $id")->set(['token'],[$token])->update();
     }
 
-    public function actionLogout() {
+    public function actionLogout()
+    {
         Auth::logOut();
         redirect(route('main/index'));
     }
+
+    public function actionShow()
+    {
+        $users = new User();
+        $data = $users
+            ->where("id!=".Auth::getId()."")
+            ->get();
+
+        view('user/show' , $data);
+    }
+
+
 }
+

@@ -8,7 +8,7 @@ if (isset($_SESSION['avatar'])){
     $avatar = $_SESSION['avatar'];
 }
 
-
+dd($_SESSION['friends']);
 ?>
 
 
