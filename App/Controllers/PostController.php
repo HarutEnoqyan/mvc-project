@@ -189,7 +189,9 @@ class PostController {
             $posts->insert();
             echo "true";
         } else {
-            session_start();
+            if (session_id()==''){
+                session_start();
+            }
             $_SESSION['old'] = $this->uncheckedData;
             $_SESSION['errors'] = $this->validateErrors;
             echo json_encode(['errors' => $this->validateErrors]);
@@ -207,10 +209,7 @@ class PostController {
             ->select("posts.*, CONCAT(users.first_name,"."' "."'".",users.last_name) as user_name")
             ->join('users', 'users.id',  '=', "posts.user_id where posts.id=$id")
             ->first()->attributes;
-
-
-
-        view("Posts/show.php", $data );
+        view("posts/show", $data );
 
     }
 

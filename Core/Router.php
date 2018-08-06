@@ -1,6 +1,7 @@
 <?php
 
 namespace Core;
+use Core\checkRoute as checking;
 
 class Router {
     public static function init()
@@ -9,6 +10,10 @@ class Router {
         if (!empty($_GET['route'])) {
             $route = $_GET['route'];
         }
+        if (checking::check()===false) {
+            redirect(route('main/errorPage'));
+        }
+
         $controllerAction = explode('/', $route);
         if (count($controllerAction) === 2) {
             $controller = ucfirst($controllerAction[0]);

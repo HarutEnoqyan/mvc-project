@@ -92,7 +92,6 @@ class ORM
 
         $statement = $pdh->query($query);
 //        dd($statement);
-//        dd($query);
         if (!$statement) {
             echo "\nPDO::errorInfo():\n";
             print_r($pdh->errorInfo());

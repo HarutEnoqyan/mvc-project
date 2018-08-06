@@ -169,8 +169,6 @@ class UserController
                 $_SESSION['name']=$userName;
                 $_SESSION['avatar']=$avatar;
                 $this->updateToken($userId,$token);
-                $friends = \App\Controllers\FriendController::initFriends();
-                $_SESSION['friends'] = $friends;
                 redirect(route('user/index' ));
             } else {
                 session_start();
@@ -208,7 +206,6 @@ class UserController
 
         view('user/show' , $data);
     }
-
 
 }
 

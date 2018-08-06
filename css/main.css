@@ -212,3 +212,25 @@ div.upload_image span {
     border-radius: 50%;
     border: 5px solid rgba(0,0,30,0.8);
 }
+
+@keyframes bounce {
+    0% {transform : translateY(0px);}
+    25% {transform: translateY(5px);}
+    40% {transform: translateY(-10px);}
+    65% {transform: translateY(0px);}
+    80% {transform: translateY(-5px);}
+    100% {transform: translateY(0px);}
+}
+
+.requests-count {
+    background-color: red;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: 0px;
+    right: -15px;
+    line-height: 19px;
+    animation: 0.7s bounce;
+}
+

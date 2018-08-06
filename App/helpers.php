@@ -7,7 +7,6 @@
 }
 
 function view($viewName , $params = []) {
-
     require_once  BASE_PATH .DIRECTORY_SEPARATOR.'App'.DIRECTORY_SEPARATOR.'Layoutes'.DIRECTORY_SEPARATOR.'header.php';
 
     if (file_exists($viewName) {

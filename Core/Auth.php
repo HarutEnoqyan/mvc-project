@@ -8,7 +8,15 @@ class Auth {
             session_start();
         }
         if($_SESSION && isset($_SESSION['token']) && isset($_SESSION['id'])){
-            return true;
+            $userId = $_SESSION['id'];
+            $uncheckedToken = $_SESSION['token'];
+            $user = new User();
+            $token = $user ->select('token')->where("id = $userId")->first()->attributes['token'];
+            if ($uncheckedToken===$token) {
+                return true;
+            }else{
+                return false;
+            }
         } else {
             return false;
         }

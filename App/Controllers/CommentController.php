@@ -20,7 +20,9 @@ class CommentController {
         }
         $comment = new Comment();
 
-        if (Validation::validateComment($_POST['comment'])===true) {
+        if (Validatio
+
+        n::validateComment($_POST['comment'])===true) {
             $comment->attributes['content'] = $_POST['comment'];
         } else {
             $this->validateErrors['comment'] = Validation::validateComment($_POST['comment']);
@@ -35,7 +37,7 @@ class CommentController {
 
             $txt =
              "
-                <div class='comments-list border m-2'>
+                <div class='comments-list border m-2' >
                         <div class='media'>
                             <div class='media-body'>
                                  <div>

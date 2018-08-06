@@ -1,4 +1,9 @@
 <?php
+use App\Models\User as User;
+if (isset(User::initRequesters()['count'])){
+    $count = User::initRequesters()['count'];
+
+}
 if (session_id()=='') {
     session_start();
 }
@@ -12,22 +17,26 @@ if (session_id()=='') {
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="<?=route("post/index")?>">Posts <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="<?=route('user/show')?>">Users</a>
-                </li>
+
                 <?php
                 if (\Core\Auth::checkIfAuth()) {
                     ?>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="<?=route("post/index")?>">Posts <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="<?=route('user/show')?>">Users</a>
+                    </li>
                     <li class="nav-item ">
-                        <a class="nav-link " href="#">MY Friends</a>
+                        <a class="nav-link " href="<?=route('friend/show')?>">MY Friends</a>
                     </li>
 
-                    <li class="nav-item relarive">
-                        <span class="requests-count absolute"></span>
-                        <a class="nav-link " href="#">Friend Requests</a>
+                    <li class="nav-item">
+                        <a class="nav-link relative" href="<?=route('friend/showRequests')?>">Friend Requests
+                        <?php if (isset($count) && $count > 0){?>
+                            <span class="requests-count absolute text-center" id="requests-count"><?= isset($count) ? $count : ''?></span>
+                        <?php } ?>
+                        </a>
                     </li>
                 <?php } ?>
 

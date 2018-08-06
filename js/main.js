@@ -5,7 +5,6 @@ $(document).ready(function () {
     $(document).on('click','.ajax_button', function () {
         input_id = $(this).attr('data-id');
         post_id = $(this).attr('data-post-id');
-        count = $('button [ data-target="#Collapse"+ input_id ] > span');
         getVal(input_id);
 
         $.ajax({

@@ -1,7 +1,9 @@
 <?php
 namespace App\Controllers;
-use App\Models\Friend;
+use App\Models\Friend as Friend;
 use Core\Auth;
+use App\Models\User as Users;
+use function MongoDB\BSON\toJSON;
 
 class FriendController  {
     public function actionSendRequest()
@@ -16,11 +18,42 @@ class FriendController  {
         redirect( route('user/show'));
     }
 
-    public static function initFriends()
+
+
+    public function actionShow()
     {
-        $friends = new Friend();
-        $friends = $friends->where("(user_id_1 = ".Auth::getId().") or(user_id_2 = ".Auth::getId().")")->get();
-        return $friends;
+        $friends = Users::InitFriends();
+        view('Friends/show', $friends);
     }
+
+    public function actionShowRequests()
+    {
+        $users = Users::initRequesters();
+        view('Friends/requests', $users);
+    }
+
+    public function actionAccept()
+    {
+        $id = $_REQUEST['id'];
+        Friend::accept($id);
+        redirect(route('friend/showRequests'));
+    }
+
+    public function actionDecline()
+    {
+        $id = $_REQUEST['id'];
+        Friend::decline($id);
+        redirect(route('friend/showRequests'));
+
+    }
+
+    public function actionDelete()
+    {
+        $id = $_REQUEST['id'];
+        Friend::deleteFriend($id);
+        redirect(route('friend/show'));
+    }
+
+
 }
 
