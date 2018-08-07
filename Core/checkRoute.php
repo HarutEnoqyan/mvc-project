@@ -31,7 +31,8 @@ class checkRoute
             'comment/create',
             'replyes/create',
             'main/test',
-            'main/message'
+            'message/send',
+            'message/show'
 
         );
 

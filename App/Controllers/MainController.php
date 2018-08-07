@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Controllers;
-use Events\Message;
-use Pusher;
+
 
 class MainController
 {
@@ -25,19 +24,6 @@ class MainController
     public function actionErrorPage()
     {
         view('page_not_found');
-    }
-    public function actionTest()
-    {
-        view('socketTest');
-    }
-
-    public function actionMessage(){
-
-
-        if (!empty($_POST['message'])){
-            $data['message'] = $_POST['message'];
-            new Message($data);
-        }
     }
 
 }

@@ -53,7 +53,7 @@ $(document).ready(function () {
         };
         $.ajax({
             method: "POST",
-            url: '?route=main/message',
+            url: '?route=message/send',
             data: data,
             success: function (data) {
                 console.log(data);
@@ -74,8 +74,6 @@ $(document).ready(function () {
     channel.bind('Message', function(data) {
         console.log(data);
         $('.result').append(data.message);
-        // alert(JSON.stringify(data));
-
     });
 
 })

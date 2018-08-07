@@ -118,10 +118,11 @@ class Migration extends ORM {
 
         global $argv;
         global $pdh;
+        $patch = date(time());
 
         if ($argv[2]) {
-            if (!file_exists(BASE_PATH .DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.$argv[2].'.sql' )){
-                $myFile = fopen(BASE_PATH .DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.$argv[2].'.sql' , 'wb' );
+            if (!file_exists(BASE_PATH .DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.$patch.$argv[2].'.sql' )){
+                $myFile = fopen(BASE_PATH .DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR.$patch.$argv[2].'.sql' , 'wb' );
                 if ($myFile) {
                     echo "Migration $argv[2] created successfuly:";
                 } else {

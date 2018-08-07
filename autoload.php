@@ -1,6 +1,7 @@
 <?php
 
 define("BASE_PATH" , dirname(__FILE__));
+define("IMAGE_PATH" , 'images/uploads');
 include "vendor/autoload.php";
 
 spl_autoload_register(function ($class) {

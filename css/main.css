@@ -234,3 +234,17 @@ div.upload_image span {
     animation: 0.7s bounce;
 }
 
+div.messenger-item div.row{
+    background: #f5f1e8;
+    border-radius: 6px;
+}
+
+div.messenger-item img {
+    border-radius: 50%;
+    width: 100%;
+}
+
+div.messenger-item p {
+    color: #4a4e4e;
+    line-height: 44px;
+}
