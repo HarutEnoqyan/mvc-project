@@ -20,9 +20,7 @@ class CommentController {
         }
         $comment = new Comment();
 
-        if (Validatio
-
-        n::validateComment($_POST['comment'])===true) {
+        if (Validation::validateComment($_POST['comment'])===true) {
             $comment->attributes['content'] = $_POST['comment'];
         } else {
             $this->validateErrors['comment'] = Validation::validateComment($_POST['comment']);

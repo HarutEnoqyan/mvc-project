@@ -38,6 +38,9 @@ if (session_id()=='') {
                         <?php } ?>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="<?=route('main/test')?>" class="nav-link">socket test</a>
+                    </li>
                 <?php } ?>
 
 

@@ -29,7 +29,10 @@ class checkRoute
             'friend/show',
             'friend/showRequests',
             'comment/create',
-            'replyes/create'
+            'replyes/create',
+            'main/test',
+            'main/message'
+
         );
 
         if (!Auth::checkIfAuth() && isset($_REQUEST['route']) ){
