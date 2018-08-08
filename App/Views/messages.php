@@ -1,4 +1,3 @@
-<?php //dd($params) ?>
 <div class="row
 ">
     <div class="col-md-3 ml-3 mr-1  border">
@@ -19,7 +18,6 @@
     <div class="col-md-8 border bg-light relative">
 
             <div class="messages mt-3  pt-2">
-
 
             </div>
 

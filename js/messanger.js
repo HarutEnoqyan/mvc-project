@@ -1,6 +1,9 @@
 $(document).ready(function () {
 
     $('.messenger-item').on('click', function () {
+        $(this).parent('div').find('div.row').css('background','#f5f1e8')
+        $(this).children('div.row').css('background','#969292');
+
         var id = $(this).attr('data-id');
         $data = {
             "id" : id
@@ -50,7 +53,7 @@ $(document).ready(function () {
                 })
                 $('div.messages').html(mainBlock);
                 height = document.getElementById("mainBlock").scrollHeight;
-                $('#mainBlock').animate({ scrollTop: height}, 500);
+                $('#mainBlock').animate({ scrollTop: height}, 0);
             }
         })
     })

@@ -238,6 +238,9 @@ div.messenger-item div.row{
     background: #f5f1e8;
     border-radius: 6px;
 }
+div.messenger-item:hover {
+    cursor: pointer;
+}
 
 div.messenger-item .messenger-item-avatar {
     width: 50px;
