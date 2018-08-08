@@ -19,7 +19,7 @@
         <div class="col-sm-3">
             <div class="card">
                 <canvas class="header-bg" width="250" height="70" id="header-blur"></canvas>
-                <img class="src-image" src = '<?=$avatar===null?'images/default-profile.jpg':'images/uploads/'.$avatar?>' >
+                <img class="src-image" src = '<?=$avatar===null || $avatar==="" ? 'images/default-profile.jpg':'images/uploads/'.$avatar?>' >
 
                 <div class="avatar">
                     <img src="" alt="" />

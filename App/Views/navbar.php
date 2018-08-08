@@ -39,7 +39,7 @@ if (session_id()=='') {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="<?=route('message/show')?>" class="nav-link">socket test</a>
+                        <a href="<?=route('message/show')?>" class="nav-link">Messages</a>
                     </li>
                 <?php } ?>
 

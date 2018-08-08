@@ -32,7 +32,8 @@ class checkRoute
             'replyes/create',
             'main/test',
             'message/send',
-            'message/show'
+            'message/show',
+            'message/ShowMessages'
 
         );
 

@@ -16,6 +16,24 @@ class MessageController
     {
         if (!empty($_POST['message'])){
             $data['message'] = $_POST['message'];
+            $data['id_from'] = Auth::getId();
+            $data['created_at'] = date("Y-m-d H:i:s");
+            if (session_id()==''){
+                session_start();
+            }
+            if ($_SESSION['avatar']!==null && $_SESSION['avatar']!=="") {
+                $data['avatar'] = $_SESSION['avatar'];
+            } else {
+                $data['avatar'] = 'default-profile.jpg';
+            }
+            $id = $_POST['id'];
+            $sms = $_POST['message'];
+            $a = new Message();
+            $a->attributes['id_from']=Auth::getId();
+            $a->attributes['id_to'] = $id;
+            $a->attributes['message'] = $sms;
+            $a->attributes['created_at'] = date("Y-m-d H:i:s");
+            $a->insert();
             new send($data);
         }
     }
@@ -37,7 +55,7 @@ class MessageController
 
         $data =  $messages->select(implode(',' , $selects))
                 ->where('id_from='.Auth::getId().' or id_to='.Auth::getId().'')
-                ->order('message_created_at')
+                ->order('messages.created_at desc')
                 ->join('users as message_sender' , 'messages.id_from' ,'=','message_sender.id')
                 ->doubleJoin('users as message_receiver' , 'messages.id_to' ,'=','message_receiver.id')->toArray();
 
@@ -65,11 +83,19 @@ class MessageController
             }
             $convarsation[$arr['partner_id']]['name'] = $arr['partner_name'];
             $convarsation[$arr['partner_id']]['avatar']=$arr['partner_avatar'];
-            $convarsation[$arr['partner_id']][] = $arr;
+            $convarsation[$arr['partner_id']]['messages'][] = $arr;
         }
 //        dd($data);
 //        dd($convarsation);
 
         view('messages',$convarsation);
     }
+
+    public function actionShowMessages()
+    {
+        $id = $_GET['id'];
+        echo json_encode(Message::getConversation($id));
+    }
+
+
 }

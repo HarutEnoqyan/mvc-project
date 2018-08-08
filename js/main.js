@@ -253,17 +253,12 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function(result){
-                // for (var pair of upload.formData.entries()) {
-                //     console.log(pair[0]+ ', ' + pair[1]);
-                // }
                     window.location.href = '?route=post/index';
-
-
-
-
             }
 
         });
     });
+
+
 
 });
