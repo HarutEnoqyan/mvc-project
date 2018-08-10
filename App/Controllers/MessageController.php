@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 use Events\Message as send;
+use Events\checkNewMessages as get;
 use App\Models\Message;
 use Core\Auth;
 
@@ -33,6 +34,7 @@ class MessageController
             $a->attributes['id_to'] = $id;
             $a->attributes['message'] = $sms;
             $a->attributes['created_at'] = date("Y-m-d H:i:s");
+            $a->attributes['seen'] = 0;
             $a->insert();
             new send($data);
         }
@@ -95,6 +97,17 @@ class MessageController
     {
         $id = $_GET['id'];
         echo json_encode(Message::getConversation($id));
+    }
+
+    public function actionCheck() {
+        $data = Message::getNewMessages();
+        echo $data;
+//        new get($data);
+    }
+
+    public function actionSetAllSeen()
+    {
+        Message::setMyMessagesAsSeen();
     }
 
 

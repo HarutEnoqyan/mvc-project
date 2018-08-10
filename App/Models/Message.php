@@ -11,6 +11,18 @@ class message extends ORM
         $this->table = 'messages';
     }
 
+    public static function getNewMessages ()
+    {
+        $count = 0;
+        $messages = new message();
+         $a =  $messages->where("id_to=".Auth::getId()." and seen!=1 ")->get();
+        foreach ($a  as $message) {
+            $count++;
+        }
+        return $count;
+    }
+
+
     public static function getConversation($partnerid)
     {
         $messages = new Message();
@@ -59,6 +71,13 @@ class message extends ORM
             $convarsation[$arr['partner_id']][] = $arr;
         }
         return $convarsation[$partnerid];
+    }
+
+    public static function setMyMessagesAsSeen()
+    {
+        $m = new message();
+        $m->where("id_to=".Auth::getId()." and seen!=1")->set(['seen'],[1])->update();
+
     }
 
 

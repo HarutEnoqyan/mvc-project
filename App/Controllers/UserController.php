@@ -208,5 +208,10 @@ class UserController
         view('user/show' , $data);
     }
 
+    public function actionShowProfile()
+    {
+
+    }
+
 }
 

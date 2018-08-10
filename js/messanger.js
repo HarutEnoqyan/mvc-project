@@ -32,7 +32,7 @@ $(document).ready(function () {
                         } else {
                             img = $('<div class = "m-avatar"><img src="images/uploads/'+imagePath+'" alt="" class="message-author-avatar"></div>')
                         }
-                        span = $('<span class="recived-message bg-primary text-light p-1">'+value.message+'</span>');
+                        span = $('<span class="recived-message bg-primary text-light p-1"><xmp>'+value.message+'</xmp></span>');
                         $p = $('<p class="created-at"><small>'+value.created_at+'</small></p>');
                         div.append(img).append(span).append($p);
                         mainBlock.append(div)
@@ -45,7 +45,7 @@ $(document).ready(function () {
                         } else {
                             img = $('<div class = "m-avatar"><img src="images/uploads/'+imagePath+'" alt="" class="message-author-avatar"></div>')
                         }
-                        span = $('<span class="my-message bg-primary text-light p-1">'+value.message+'</span>');
+                        span = $('<span class="my-message bg-primary text-light p-1"><xmp>'+value.message+'</xmp></span>');
                         $p = $('<p class="created-at"><small>'+value.created_at+'</small></p>');
                         div.append(span).append(img).append($p);
                         mainBlock.append(div)
@@ -73,10 +73,10 @@ $(document).ready(function () {
                 url: '?route=message/send',
                 data: data,
                 success: function (data) {
-                    console.log($sms);
+
                 },
                 error: function (data) {
-                    console.log(data);
+                    alert('can\'t send message');
                 }
             })
             $(this).closest('.message-input').find('input[name="message_text"]').val('');
@@ -85,7 +85,6 @@ $(document).ready(function () {
 
     $(document).on('keyup','input[name="message_text"]' , function (event) {
         if(event.which ===13) {
-
             $id = $(this).attr('data-id');
             $sms = $(this).val();
             if($sms.trim() !==" " && $sms.trim() !==""){
@@ -124,6 +123,13 @@ $(document).ready(function () {
         }
         return "";
     }
+    function setCookie(cname, cvalue) {
+
+        document.cookie = cname + "=" + cvalue + ";" ;
+    }
+
+
+
 
     Pusher.logToConsole = true;
 
@@ -132,7 +138,11 @@ $(document).ready(function () {
         encrypted: true
     });
 
+
+
     var channel = pusher.subscribe('chat-room');
+    var channel_2 = pusher.subscribe('checkNewMessages');
+
     channel.bind('Message', function(data) {
         my_id = getCookie('id');
         if(data.id_from ===my_id){
@@ -143,11 +153,15 @@ $(document).ready(function () {
             } else {
                 img = $('<div class = "m-avatar"><img src="images/uploads/'+imagePath+'" alt="" class="message-author-avatar"></div>')
             }
-            span = $('<span class="my-message bg-primary text-light p-1">'+data.message+'</span>');
+            span = $('<span class="my-message bg-primary text-light p-1"><xmp>'+data.message+'</xmp></span>');
             $p = $('<p class="created-at"><small>'+data.created_at+'</small></p>');
             div.append(span).append(img).append($p);
-            height = document.getElementById("mainBlock").scrollHeight;
-            $('#mainBlock').animate({ scrollTop: height}, 500);
+            var block = document.getElementById("mainBlock");
+            if(block !== null) {
+                height = document.getElementById("mainBlock").scrollHeight;
+                $('#mainBlock').animate({ scrollTop: height}, 500);
+            }
+
 
         }
         else {
@@ -158,16 +172,48 @@ $(document).ready(function () {
             } else {
                 img = $('<div class = "m-avatar"><img src="images/uploads/'+imagePath+'" alt="" class="message-author-avatar"></div>')
             }
-            span = $('<span class="recived-message bg-primary text-light p-1">'+data.message+'</span>');
+            span = $('<span class="recived-message bg-primary text-light p-1"><xmp>'+data.message+'</xmp></span>');
             $p = $('<p class="created-at"><small>'+data.created_at+'</small></p>');
             div.append(img).append(span).append($p);
-            height = document.getElementById("mainBlock").scrollHeight;
-            $('#mainBlock').animate({ scrollTop: height}, 500);
+            var block = document.getElementById("mainBlock");
+            if(block !== null) {
+                height = document.getElementById("mainBlock").scrollHeight;
+                $('#mainBlock').animate({ scrollTop: height}, 500);
+            }
+            notify();
         }
 
 
         $('#mainBlock').append(div);
     });
+
+    notify = function () {
+        $.ajax({
+            method: "POST",
+            url: '?route=message/check',
+            success: function (data) {
+                if ( data && data >0) {
+                    $('#messangerLink span').css('display','block').html(data);
+                }
+            },
+            error: function (data) {
+                console.log("chekav");
+            }
+        })
+
+    }
+
+    $(document).on('click','div.message-input input#content', function (ev) {
+        $.ajax({
+            method: "POST",
+            url: '?route=message/setAllSeen',
+            success: function (data) {
+                $('#messangerLink span').css('display','none').html("");
+            },
+            error: function (data) {
+            }
+        })
+    })
 
 
 })

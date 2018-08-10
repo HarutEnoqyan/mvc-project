@@ -1,9 +1,19 @@
 <?php
 use App\Models\User as User;
+use App\Models\Message as Messages;
+use Core\Auth;
+$count = 0;
+$messagesCount=0;
 if (isset(User::initRequesters()['count'])){
     $count = User::initRequesters()['count'];
-
 }
+if(Auth::checkIfAuth()) {
+    if(Messages::getNewMessages() ){
+        $messagesCount = Messages::getNewMessages();
+    }
+}
+
+
 if (session_id()=='') {
     session_start();
 }
@@ -38,8 +48,9 @@ if (session_id()=='') {
                         <?php } ?>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item relative" id="messangerLink">
                         <a href="<?=route('message/show')?>" class="nav-link">Messages</a>
+                        <span class="requests-count absolute text-center" <?=$messagesCount>0?'style="display:block;"':'style="display:none;"'?> > <?=$messagesCount>0?$messagesCount:''?></span>
                     </li>
                 <?php } ?>
 

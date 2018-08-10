@@ -33,7 +33,9 @@ class checkRoute
             'main/test',
             'message/send',
             'message/show',
-            'message/ShowMessages'
+            'message/ShowMessages',
+            'message/check',
+            'message/setAllSeen'
 
         );
 
