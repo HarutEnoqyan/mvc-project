@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    Pusher.logToConsole = true;
+    Pusher.logToConsole = false;
+
     let pusher = new Pusher('9d329e4ffa4a8363a7d5', {
         cluster: 'eu',
         encrypted: true
@@ -8,6 +9,7 @@ $(document).ready(function () {
     let messanger;
     messanger = {
         partner_id: '',
+        $seen:'',
         /*
          * generating Messenger Block
          */
@@ -19,23 +21,12 @@ $(document).ready(function () {
             //noinspection JSValidateTypes
             $(event).children('div.row').css('background', '#969292');
 
-            let $seen = 0;
-
-            $.ajax({
-                method: "POST",
-                url: '?route=message/SentMessage',
-                success: function (data) {
-                    $seen = data
-                },
-                error: function () {
-                    console.log("chekav");
-                }
-            });
-
             let id = $(event).attr('data-id');
+
             let $data = {
                 "id": id
             };
+
             $.ajax({
                 url: "?route=message/ShowMessages",
                 type: 'GET',
@@ -44,52 +35,53 @@ $(document).ready(function () {
                     $data = JSON.parse(result);
                     let mainBlock = $('<div id="mainBlock"></div>');
 
-
                     $.each($data, function (index, value) {
-                        let sent_by = value['sent_by'];
-                        $('input.send_message').attr('data-id', value.partner_id);
-                        $('input[name="message_text"]').attr('data-id', value.partner_id);
-                        $('.message-input').css('display', 'block');
+                        if(index!=='seen'){
+                            let sent_by = value['sent_by'];
+                            $('input.send_message').attr('data-id', value.partner_id);
+                            $('input[name="message_text"]').attr('data-id', value.partner_id);
+                            $('.message-input').css('display', 'block');
 
-                        let div, img, span, $p ,imagePath;
+                            let div, img, span, $p ,imagePath;
 
-                        if (sent_by === id) {
+                            if (sent_by === id) {
 
-                            div = $('<div class="col-md-12 "></div>');
-                            imagePath = value['partner_avatar'];
-                            if (imagePath !== '') {
-                                img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                div = $('<div class="col-md-12 "></div>');
+                                imagePath = value['partner_avatar'];
+                                if (imagePath !== '') {
+                                    img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                } else {
+                                    imagePath = 'default-profile.jpg';
+                                    img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                }
+                                span = $('<span class="recived-message bg-primary text-light p-1"><xmp>' + value.message + '</xmp></span>');
+                                $p = $('<p class="created-at"><small>' + value['created_at'] + '</small></p>');
+                                div.append(img).append(span).append($p);
+                                mainBlock.append(div);
+                                mainBlock.find('.showIfSeen').remove();
                             } else {
-                                imagePath = 'default-profile.jpg';
-                                img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
-                            }
-                            span = $('<span class="recived-message bg-primary text-light p-1"><xmp>' + value.message + '</xmp></span>');
-                            $p = $('<p class="created-at"><small>' + value['created_at'] + '</small></p>');
-                            div.append(img).append(span).append($p);
-                            mainBlock.append(div);
-                            mainBlock.find('.showIfSeen').remove();
-                        } else {
-                            div = $('<div class="col-md-12 text-right"></div>');
-                            imagePath = value['my_avatar'];
-                            if (imagePath === '') {
-                                imagePath = 'default-profile.jpg';
-                                img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
-                            } else {
-                                img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
-                            }
-                            span = $('<span class="my-message bg-primary text-light p-1"><xmp>' + value['message'] + '</xmp></span>');
-                            $p = $('<p class="created-at"><small>' + value['created_at'] + '</small></p>');
-                            div.append(span).append(img).append($p);
-                            mainBlock.find('.showIfSeen').remove();
-                            mainBlock.append(div);
-                            if ($seen > 0) {
-                                mainBlock.append().append('<span class="showIfSeen"></span>')
-                            } else {
-                                mainBlock.append().append('<span class="showIfSeen">seen</span>')
-                            }
+                                div = $('<div class="col-md-12 text-right"></div>');
+                                imagePath = value['my_avatar'];
 
+                                if (imagePath === '') {
+                                    imagePath = 'default-profile.jpg';
+                                    img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                } else {
+                                    img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                }
+
+                                span = $('<span class="my-message bg-primary text-light p-1"><xmp>' + value['message'] + '</xmp></span>');
+                                $p = $('<p class="created-at"><small>' + value['created_at'] + '</small></p>');
+                                div.append(span).append(img).append($p);
+                                mainBlock.append(div);
+                                mainBlock.find('.showIfSeen').remove();
+                                if (parseInt($data.seen) === 0) {
+                                    mainBlock.append('<span class="showIfSeen">seen</span>')
+                                }
+                            }
                         }
                     });
+
                     $('div.messages').html(mainBlock);
                     let height = document.getElementById("mainBlock").scrollHeight;
                     $('#mainBlock').animate({scrollTop: height}, 0);
@@ -143,10 +135,9 @@ $(document).ready(function () {
                     url: '?route=message/send',
                     data: data,
                     success: function () {
-                        console.log("sent");
                     },
                     error: function (data) {
-                        console.log(data);
+                        // console.log(data);
                     }
                 });
                 $(event).val('');
@@ -158,24 +149,25 @@ $(document).ready(function () {
          */
         showSentMessage: function (data) {
             let span, $p,div,imagePath , img , height , mainBlock =  $('#mainBlock');
-            $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove();
-            div = $('<div class="col-md-12 text-right"></div>');
-            imagePath = data['avatar'];
-            if (imagePath === 'default-profile.jpg') {
-                img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
-            } else {
-               img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
-            }
-            span = $('<span class="my-message bg-primary text-light p-1"><xmp>' + data['message'] + '</xmp></span>');
-            $p = $('<p class="created-at"><small>' + data['created_at'] + '</small></p>');
-            div.append(span).append(img).append($p);
-            let block = document.getElementById("mainBlock");
-            if (block !== null) {
-                height = document.getElementById("mainBlock").scrollHeight;
-                mainBlock.animate({scrollTop: height}, 500);
-            }
-            mainBlock.append(div);
-            mainBlock.append('<span class="showIfSeen"></span>');
+                $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove();
+                div = $('<div class="col-md-12 text-right"></div>');
+                imagePath = data['avatar'];
+                if (imagePath === 'default-profile.jpg') {
+                    img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                } else {
+                    img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                }
+                span = $('<span class="my-message bg-primary text-light p-1"><xmp>' + data['message'] + '</xmp></span>');
+                $p = $('<p class="created-at"><small>' + data['created_at'] + '</small></p>');
+                div.append(span).append(img).append($p);
+                let block = document.getElementById("mainBlock");
+                if (block !== null) {
+                    height = document.getElementById("mainBlock").scrollHeight;
+                    mainBlock.animate({scrollTop: height}, 500);
+                }
+                mainBlock.append(div);
+                mainBlock.append('<span class="showIfSeen"></span>');
+
         },
 
         /*
@@ -183,7 +175,7 @@ $(document).ready(function () {
          */
         showReceivedMessage: function (data) {
             let span, $p, div , imagePath , img , height , mainBlock =  $('#mainBlock');
-            if (data['id_from'] === this['partner_id']) {
+
                 $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove();
                 div = $('<div class="col-md-12"></div>');
                 imagePath = data['avatar'];
@@ -201,7 +193,7 @@ $(document).ready(function () {
                     mainBlock.animate({scrollTop: height}, 500);
                 }
                 mainBlock.append(div);
-            }
+
             this.notify();
         },
 
@@ -210,7 +202,7 @@ $(document).ready(function () {
          */
         checkNewMessages: function (data) {
             let height;
-            if (data['id'] !== messanger.getCookie('id')) {
+            if (data['id']===messanger.partner_id && data['partner_id']===messanger.getCookie('id')) {
                 $('.messages').find('div#mainBlock:last-child span.showIfSeen').html('seen');
             }
 
@@ -247,6 +239,7 @@ $(document).ready(function () {
             $.ajax({
                 method: "POST",
                 url: '?route=message/checkIfSeen',
+                data: {'partner_id' : messanger.partner_id},
                 success: function (data) {
 
                 },
@@ -316,11 +309,14 @@ $(document).ready(function () {
     channel.bind('Message', function(data) {
         let my_id = messanger.getCookie('id');
         let mainBlock = $('#mainBlock');
+
         if(data['id_from'] === my_id){
            messanger.showSentMessage(data);
         }
         else {
-            messanger.showReceivedMessage(data)
+            if (data['id_from'] === messanger.partner_id && data['id_to'] === my_id) {
+                messanger.showReceivedMessage(data)
+            }
         }
     });
 

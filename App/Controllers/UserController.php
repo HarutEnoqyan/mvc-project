@@ -4,9 +4,6 @@ namespace App\Controllers;
 use App\Models\User;
 use Core\Auth;
 use Core\Validation;
-use App\Controllers\FriendController;
-
-
 
 class UserController
 {

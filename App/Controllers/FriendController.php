@@ -3,7 +3,6 @@ namespace App\Controllers;
 use App\Models\Friend as Friend;
 use Core\Auth;
 use App\Models\User as Users;
-use function MongoDB\BSON\toJSON;
 
 class FriendController  {
     public function actionSendRequest()

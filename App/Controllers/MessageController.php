@@ -19,6 +19,7 @@ class MessageController
             $data['message'] = $_POST['message'];
             $data['id_from'] = Auth::getId();
             $data['created_at'] = date("Y-m-d H:i:s");
+            $data['id_to'] = $_POST['id'];
             if (session_id()==''){
                 session_start();
             }
@@ -114,6 +115,7 @@ class MessageController
     public function actionCheckIfSeen()
     {
         $a['id'] = Auth::getId();
+        $a['partner_id'] = $_POST['partner_id'];
         new get($a);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 use Core\ORM;
 use Core\Auth;
+use Events\SeenMessage;
 
 class message extends ORM
 {
@@ -69,6 +70,7 @@ class message extends ORM
                 $arr['created_at'] = $val['message_created_at'];
             }
             $convarsation[$arr['partner_id']][] = $arr;
+            $convarsation[$arr['partner_id']]['seen'] = static::checkSentMessage();;
         }
         return $convarsation[$partnerid];
     }
@@ -84,11 +86,12 @@ class message extends ORM
     {
         $count=0;
         $messages = new message();
-        $a = $messages->where("id_from=".Auth::getId()." and seen=0")->get();
+        $partner_id = $_REQUEST['id'];
+        $a = $messages->where("id_from=".Auth::getId()." and id_to=".$partner_id." and seen=0")->get();
         for ($i = 0 ; $i < count($a) ; $i++) {
             $count++;
         }
-        echo $count;
+        return $count;
     }
 
 
