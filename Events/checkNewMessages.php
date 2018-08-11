@@ -9,9 +9,9 @@ namespace Events;
  */
 
 namespace Events;
+use Core\pusherInit;
 
-
-class checkNewMessages extends \Core\pusherInit
+class checkNewMessages extends pusherInit
 {
     public $data;
 

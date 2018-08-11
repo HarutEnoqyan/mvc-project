@@ -1,8 +1,9 @@
 <div class="row
 ">
     <div class="col-md-3 ml-3 mr-1  border">
-
-        <?php foreach($params as $key=>$conn) {?>
+        <?php
+        /** @var  $params */
+        foreach($params as $key=> $conn) {?>
         <div class='col-md-12 messenger-item border  ' data-id="<?=$key?>">
             <div class="row">
                 <div class="col-lg-4 col-md-6 messenger-item-avatar mt-1">

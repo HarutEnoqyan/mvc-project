@@ -1,13 +1,15 @@
 <?php
 
 namespace Events;
+use Core\pusherInit;
+
 /**
  * Created by PhpStorm.
  * User: User
  * Date: 8/7/2018
  * Time: 2:03 PM
  */
-class Message extends \Core\pusherInit
+class Message extends pusherInit
 {
     public $data;
 

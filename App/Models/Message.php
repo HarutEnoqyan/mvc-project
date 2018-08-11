@@ -16,7 +16,7 @@ class message extends ORM
         $count = 0;
         $messages = new message();
          $a =  $messages->where("id_to=".Auth::getId()." and seen!=1 ")->get();
-        foreach ($a  as $message) {
+         for ($i = 0 ; $i < count($a) ; $i++) {
             $count++;
         }
         return $count;
@@ -85,8 +85,8 @@ class message extends ORM
         $count=0;
         $messages = new message();
         $a = $messages->where("id_from=".Auth::getId()." and seen=0")->get();
-        foreach ($a as $value) {
-            $count ++;
+        for ($i = 0 ; $i < count($a) ; $i++) {
+            $count++;
         }
         echo $count;
     }
