@@ -377,3 +377,10 @@ div.card .modal .profile-userpic img {
     transform: translate(-23px,-19px);
 }
 
+#typing-gif {
+    bottom: 14vh;
+    width: 7%;
+    left: 10px;
+    display: block;
+    margin-bottom: 10px;
+}

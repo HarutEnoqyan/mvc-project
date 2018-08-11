@@ -37,7 +37,8 @@ class checkRoute
             'message/check',
             'message/setAllSeen',
             'message/checkIfSeen',
-            'message/SentMessage'
+            'message/SentMessage',
+            'message/isTyping'
 
         );
 

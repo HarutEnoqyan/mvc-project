@@ -33,7 +33,7 @@ $(document).ready(function () {
                 data: $data,
                 success: function (result) {
                     $data = JSON.parse(result);
-                    let mainBlock = $('<div id="mainBlock"></div>');
+                    let mainBlock = $('<div  id="mainBlock"></div>') , mainDiv =  $('div.messages');
 
                     $.each($data, function (index, value) {
                         if(index!=='seen'){
@@ -82,7 +82,9 @@ $(document).ready(function () {
                         }
                     });
 
-                    $('div.messages').html(mainBlock);
+                    mainBlock.append('<img src="images/typing.gif" id="typing-gif" alt="" class="absolute">')
+                    mainDiv.html(mainBlock);
+
                     let height = document.getElementById("mainBlock").scrollHeight;
                     $('#mainBlock').animate({scrollTop: height}, 0);
                 }
@@ -327,7 +329,53 @@ $(document).ready(function () {
 
     $(document).on('click','div.message-input input#content', function () {
         messanger.checkAndSetAllSeen();
-    })
+    });
+
+    let prevTimeout;
+    hideTypingAnimation = function() {
+        if (prevTimeout) {
+            window.clearTimeout(prevTimeout);
+        }
+        prevTimeout = window.setTimeout(function () {
+            $('img#typing-gif').hide();
+        },5000);
+    };
+
+    channel.bind('isTyping',function (data) {
+
+        if(data===messanger.partner_id){
+            $('img#typing-gif').show();
+            hideTypingAnimation();
+        }
+
+        let block = document.getElementById("mainBlock");
+        if (block !== null) {
+            height = document.getElementById("mainBlock").scrollHeight;
+            $('#mainBlock').animate({scrollTop: height}, 500);
+        }
+    });
+    let typing = false;
+    $(document).on('keydown','div.message-input input#content', function () {
+        if(typing===false) {
+            typing=true;
+            $.ajax({
+                method: "POST",
+                url: '?route=message/isTyping',
+                data: {'id':messanger.getCookie('id')},
+                success: function (data) {
+                },
+                error: function () {
+                    alert('can\'t send message');
+                }
+            });
+        }
+        setTimeout(function () {
+            typing = false
+        },5000)
+
+    });
+
+
 
 
 });

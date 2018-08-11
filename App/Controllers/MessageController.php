@@ -8,6 +8,7 @@
 namespace App\Controllers;
 use Events\Message as send;
 use Events\checkNewMessages as get;
+use Events\isTyping as typing;
 use App\Models\Message;
 use Core\Auth;
 
@@ -122,6 +123,13 @@ class MessageController
     public function actionSetAllSeen()
     {
         Message::setMyMessagesAsSeen();
+    }
+
+    public function actionIsTyping()
+    {
+        $id = $_POST['id'];
+        new typing($id);
+
     }
 
 
