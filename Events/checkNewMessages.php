@@ -23,12 +23,12 @@ class checkNewMessages extends \Core\pusherInit
 
     protected function getChanel()
     {
-        return 'checkNewMessages';
+        return 'chat-room';
     }
 
     protected function getEvent()
     {
-        return 'status';
+        return 'checkNewMessages';
     }
 
     protected function getData()

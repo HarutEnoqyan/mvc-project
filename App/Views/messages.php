@@ -18,7 +18,6 @@
     <div class="col-md-8 border bg-light relative">
 
             <div class="messages mt-3  pt-2">
-
             </div>
 
         <div class="row col-md-12 message-input">

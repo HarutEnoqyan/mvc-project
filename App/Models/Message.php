@@ -80,5 +80,16 @@ class message extends ORM
 
     }
 
+    public static function checkSentMessage()
+    {
+        $count=0;
+        $messages = new message();
+        $a = $messages->where("id_from=".Auth::getId()." and seen=0")->get();
+        foreach ($a as $value) {
+            $count ++;
+        }
+        echo $count;
+    }
+
 
 }

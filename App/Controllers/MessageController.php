@@ -100,15 +100,28 @@ class MessageController
     }
 
     public function actionCheck() {
+
         $data = Message::getNewMessages();
         echo $data;
-//        new get($data);
+
+    }
+
+    public function actionSentMessage()
+    {
+        Message::checkSentMessage();
+    }
+
+    public function actionCheckIfSeen()
+    {
+        $a['id'] = Auth::getId();
+        new get($a);
     }
 
     public function actionSetAllSeen()
     {
         Message::setMyMessagesAsSeen();
     }
+
 
 
 }

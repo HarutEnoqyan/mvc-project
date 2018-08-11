@@ -202,11 +202,16 @@ div.upload_image span {
     position: relative;
     margin-top: 15px;
     z-index: 100;
+    height: 100px;
+    width: 100px;
+    overflow: hidden;
+    margin: auto;
 }
 
 .card .avatar img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -351,3 +356,24 @@ div.card div.avatar img:hover {
 .modal-body .collapse div:last-child input{
     transform: translateY(-2px);
 }
+
+div.card .modal .profile-userpic {
+    width: 230px;
+    height: 250px;
+    overflow: hidden;
+    margin: auto;
+}
+
+div.card .modal .profile-userpic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.showIfSeen{
+    content: 'seen';
+    display: block;
+    float: right;
+    transform: translate(-23px,-19px);
+}
+
