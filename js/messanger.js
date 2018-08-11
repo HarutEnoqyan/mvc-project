@@ -1,26 +1,25 @@
 $(document).ready(function () {
-
     Pusher.logToConsole = true;
-
-
-    var pusher = new Pusher('9d329e4ffa4a8363a7d5', {
+    let pusher = new Pusher('9d329e4ffa4a8363a7d5', {
         cluster: 'eu',
         encrypted: true
     });
-
-    var channel = pusher.subscribe('chat-room');
-
-    var messanger = {
-        partner_id : '',
+    let channel = pusher.subscribe('chat-room');
+    let messanger;
+    messanger = {
+        partner_id: '',
         /*
-         * generating Messanger Block
+         * generating Messenger Block
          */
-        generateMessangerBlock : function (event) {
+        generateMessangerBlock: function (event) {
             this.partner_id = $(event).attr('data-id');
-            $(event).parent('div').find('div.row').css('background','#f5f1e8')
-            $(event).children('div.row').css('background','#969292');
 
-            $seen = 0;
+            $(event).parent('div').find('div.row').css('background', '#f5f1e8');
+
+            //noinspection JSValidateTypes
+            $(event).children('div.row').css('background', '#969292');
+
+            let $seen = 0;
 
             $.ajax({
                 method: "POST",
@@ -28,84 +27,87 @@ $(document).ready(function () {
                 success: function (data) {
                     $seen = data
                 },
-                error: function (data) {
+                error: function () {
                     console.log("chekav");
                 }
-            })
+            });
 
-            var id = $(event).attr('data-id');
-            $data = {
-                "id" : id
-            }
+            let id = $(event).attr('data-id');
+            let $data = {
+                "id": id
+            };
             $.ajax({
-                url : "?route=message/ShowMessages",
-                type:'GET',
-                data:$data,
+                url: "?route=message/ShowMessages",
+                type: 'GET',
+                data: $data,
                 success: function (result) {
                     $data = JSON.parse(result);
-                    mainBlock = $('<div id="mainBlock"></div>');
+                    let mainBlock = $('<div id="mainBlock"></div>');
 
 
-                    $.each($data , function (index, value) {
+                    $.each($data, function (index, value) {
+                        let sent_by = value['sent_by'];
+                        $('input.send_message').attr('data-id', value.partner_id);
+                        $('input[name="message_text"]').attr('data-id', value.partner_id);
+                        $('.message-input').css('display', 'block');
 
-                        $('input.send_message').attr('data-id' , value.partner_id);
-                        $('input[name="message_text"]').attr('data-id' , value.partner_id);
-                        $('.message-input').css('display','block');
+                        let div, img, span, $p ,imagePath;
 
-                        if (value.sent_by===id) {
+                        if (sent_by === id) {
+
                             div = $('<div class="col-md-12 "></div>');
-                            imagePath = value.partner_avatar;
-                            if(imagePath ==='' ) {
-                                imagePath = 'default-profile.jpg';
-                                img = $('<div class = "m-avatar"><img src="images/'+imagePath+'" alt="" class="message-author-avatar"></div>')
+                            imagePath = value['partner_avatar'];
+                            if (imagePath !== '') {
+                                img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                             } else {
-                                img = $('<div class = "m-avatar"><img src="images/uploads/'+imagePath+'" alt="" class="message-author-avatar"></div>')
+                                imagePath = 'default-profile.jpg';
+                                img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                             }
-                            span = $('<span class="recived-message bg-primary text-light p-1"><xmp>'+value.message+'</xmp></span>');
-                            $p = $('<p class="created-at"><small>'+value.created_at+'</small></p>');
+                            span = $('<span class="recived-message bg-primary text-light p-1"><xmp>' + value.message + '</xmp></span>');
+                            $p = $('<p class="created-at"><small>' + value['created_at'] + '</small></p>');
                             div.append(img).append(span).append($p);
-                            mainBlock.append(div)
+                            mainBlock.append(div);
                             mainBlock.find('.showIfSeen').remove();
                         } else {
                             div = $('<div class="col-md-12 text-right"></div>');
-                            imagePath = value.my_avatar;
-                            if(imagePath ==='') {
+                            imagePath = value['my_avatar'];
+                            if (imagePath === '') {
                                 imagePath = 'default-profile.jpg';
-                                img = $('<div class = "m-avatar"><img src="images/'+imagePath+'" alt="" class="message-author-avatar"></div>')
+                                img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                             } else {
-                                img = $('<div class = "m-avatar"><img src="images/uploads/'+imagePath+'" alt="" class="message-author-avatar"></div>')
+                                img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                             }
-                            span = $('<span class="my-message bg-primary text-light p-1"><xmp>'+value.message+'</xmp></span>');
-                            $p = $('<p class="created-at"><small>'+value.created_at+'</small></p>');
+                            span = $('<span class="my-message bg-primary text-light p-1"><xmp>' + value['message'] + '</xmp></span>');
+                            $p = $('<p class="created-at"><small>' + value['created_at'] + '</small></p>');
                             div.append(span).append(img).append($p);
                             mainBlock.find('.showIfSeen').remove();
-                            mainBlock.append(div)
-                            if($seen>0){
+                            mainBlock.append(div);
+                            if ($seen > 0) {
                                 mainBlock.append().append('<span class="showIfSeen"></span>')
                             } else {
                                 mainBlock.append().append('<span class="showIfSeen">seen</span>')
                             }
 
                         }
-                    })
+                    });
                     $('div.messages').html(mainBlock);
-                    height = document.getElementById("mainBlock").scrollHeight;
-                    $('#mainBlock').animate({ scrollTop: height}, 0);
+                    let height = document.getElementById("mainBlock").scrollHeight;
+                    $('#mainBlock').animate({scrollTop: height}, 0);
                 }
             })
         },
 
         /*
-         * Sending message on button click, geting params from button
+         * Sending message on button click, getting params from button
          */
         sendMessageOnClick : function (event) {
-            $id = $(event).attr('data-id');
-            $sms = $(event).closest('.message-input').find('input[name="message_text"]').val();
+            let $id = $(event).attr('data-id');
+            let $sms = $(event).closest('.message-input').find('input[name="message_text"]').val();
 
-            if($sms.trim() !==" " && $sms.trim() !=="" ) {
-                $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove()
+            if ($sms.trim() !== " " && $sms.trim() !== "") {
+                $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove();
 
-                data = {
+                let data = {
                     "id": $id,
                     "message": $sms
                 };
@@ -114,88 +116,89 @@ $(document).ready(function () {
                     url: '?route=message/send',
                     data: data,
                     success: function (data) {
-
                     },
-                    error: function (data) {
+                    error: function () {
                         alert('can\'t send message');
                     }
-                })
+                });
                 $(event).closest('.message-input').find('input[name="message_text"]').val('');
             }
         },
 
         /*
-         * Sending message on input keydown, getting params from input
+         * Sending message on input key down, getting params from input
          */
-        sendMessageOnKeyDown : function (event) {
-            $id = $(event).attr('data-id');
+        sendMessageOnKeyDown: function (event) {
+            let $id = $(event).attr('data-id');
+            let $sms;
             $sms = $(event).val();
-            if($sms.trim() !==" " && $sms.trim() !==""){
-                $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove()
-                data = {
-                    "id" : $id,
-                    "message" : $sms
+            if ($sms.trim() !== " " && $sms.trim() !== "") {
+                $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove();
+                let data = {
+                    "id": $id,
+                    "message": $sms
                 };
                 $.ajax({
                     method: "POST",
                     url: '?route=message/send',
                     data: data,
-                    success: function (data) {
+                    success: function () {
                         console.log("sent");
                     },
                     error: function (data) {
                         console.log(data);
                     }
-                })
+                });
                 $(event).val('');
             }
         },
 
         /*
-         * appending sent message to messager block
+         * appending sent message to messenger block
          */
-        showSentMessage : function (data) {
+        showSentMessage: function (data) {
+            let span, $p,div,imagePath , img , height , mainBlock =  $('#mainBlock');
             $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove();
             div = $('<div class="col-md-12 text-right"></div>');
-            imagePath = data.avatar;
-            if(imagePath ==='default-profile.jpg') {
-                img = $('<div class = "m-avatar"><img src="images/'+imagePath+'" alt="" class="message-author-avatar"></div>')
+            imagePath = data['avatar'];
+            if (imagePath === 'default-profile.jpg') {
+                img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
             } else {
-                img = $('<div class = "m-avatar"><img src="images/uploads/'+imagePath+'" alt="" class="message-author-avatar"></div>')
+               img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
             }
-            span = $('<span class="my-message bg-primary text-light p-1"><xmp>'+data.message+'</xmp></span>');
-            $p = $('<p class="created-at"><small>'+data.created_at+'</small></p>');
+            span = $('<span class="my-message bg-primary text-light p-1"><xmp>' + data['message'] + '</xmp></span>');
+            $p = $('<p class="created-at"><small>' + data['created_at'] + '</small></p>');
             div.append(span).append(img).append($p);
-            var block = document.getElementById("mainBlock");
-            if(block !== null) {
+            let block = document.getElementById("mainBlock");
+            if (block !== null) {
                 height = document.getElementById("mainBlock").scrollHeight;
-                $('#mainBlock').animate({ scrollTop: height}, 500);
+                mainBlock.animate({scrollTop: height}, 500);
             }
-            mainBlock = $('#mainBlock');
             mainBlock.append(div);
             mainBlock.append('<span class="showIfSeen"></span>');
         },
 
         /*
-         * appending received message to messanger block
+         * appending received message to messenger block
          */
-        showReceivedMessage : function(data){
-            if (data.id_from === this.partner_id) {
+        showReceivedMessage: function (data) {
+            let span, $p, div , imagePath , img , height , mainBlock =  $('#mainBlock');
+            if (data['id_from'] === this['partner_id']) {
                 $('.messages').find('div#mainBlock:last-child span.showIfSeen').remove();
                 div = $('<div class="col-md-12"></div>');
-                imagePath = data.avatar;
+                imagePath = data['avatar'];
                 if (imagePath === 'default-profile.jpg') {
                     img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 } else {
                     img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 }
                 span = $('<span class="recived-message bg-primary text-light p-1"><xmp>' + data.message + '</xmp></span>');
-                $p = $('<p class="created-at"><small>' + data.created_at + '</small></p>');
+                $p = $('<p class="created-at"><small>' + data['created_at'] + '</small></p>');
                 div.append(img).append(span).append($p);
-                var block = document.getElementById("mainBlock");
+                let block = document.getElementById("mainBlock");
                 if (block !== null) {
                     height = document.getElementById("mainBlock").scrollHeight;
-                    $('#mainBlock').animate({scrollTop: height}, 500);
+                    mainBlock.animate({scrollTop: height}, 500);
                 }
                 mainBlock.append(div);
             }
@@ -206,15 +209,15 @@ $(document).ready(function () {
          * checking if message seen
          */
         checkNewMessages: function (data) {
-
-            if(data['id']!==messanger.getCookie('id')) {
+            let height;
+            if (data['id'] !== messanger.getCookie('id')) {
                 $('.messages').find('div#mainBlock:last-child span.showIfSeen').html('seen');
             }
 
-            var block = document.getElementById("mainBlock");
-            if(block !== null) {
+            let block = document.getElementById("mainBlock");
+            if (block !== null) {
                 height = document.getElementById("mainBlock").scrollHeight;
-                $('#mainBlock').animate({ scrollTop: height}, 500);
+                $('#mainBlock').animate({scrollTop: height}, 500);
             }
 
         },
@@ -222,45 +225,44 @@ $(document).ready(function () {
         /*
          * notifying about new messages
          */
-        notify : function () {
+        notify: function () {
             $.ajax({
                 method: "POST",
                 url: '?route=message/check',
                 success: function (data) {
-                    if ( data && data >0) {
-
-                        $('#messangerLink span').css('display','block').html(data);
+                    if (data && data > 0) {
+                        $("#messangerLink").find("span").css('display', 'block').html(data);
                     }
                 },
-                error: function (data) {
+                error: function () {
                     console.log("chekav");
                 }
             })
         },
 
         /*
-         * realtime checkinf if seen and seting all seen in db
+         * real time checking if seen and seting all seen in db
          */
-        checkAndSetAllSeen : function () {
+        checkAndSetAllSeen: function () {
             $.ajax({
                 method: "POST",
                 url: '?route=message/checkIfSeen',
                 success: function (data) {
 
                 },
-                error: function (data) {
+                error: function () {
                     alert('can\'t send message');
                 }
-            })
+            });
 
 
             $.ajax({
                 method: "POST",
                 url: '?route=message/setAllSeen',
-                success: function (data) {
-                    $('#messangerLink span').css('display','none').html("");
+                success: function () {
+                    $('#messangerLink').find('span').css('display', 'none').html("");
                 },
-                error: function (data) {
+                error: function () {
                 }
             })
         },
@@ -269,16 +271,16 @@ $(document).ready(function () {
         /*
          * geting data from cookie
          */
-        getCookie : function (cname) {
-            var name = cname + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for(var i = 0; i <ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
+        getCookie: function (cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') {
                     c = c.substring(1);
                 }
-                if (c.indexOf(name) == 0) {
+                if (c.indexOf(name) === 0) {
                     return c.substring(name.length, c.length);
                 }
             }
@@ -288,16 +290,15 @@ $(document).ready(function () {
         /*
          * for seting data in cookie
          */
-        setCookie : function (cname, cvalue) {
-            document.cookie = cname + "=" + cvalue + ";" ;
-        }
+        // setCookie: function (cname, cvalue) {
+        //     document.cookie = cname + "=" + cvalue + ";";
+        // }
 
 
-    }
+    };
 
-
-
-    $('.messenger-item').on('click', function () {
+    //language=JQuery-CSS
+    $('.messenger-item').click(function () {
        messanger.generateMessangerBlock(this);
     });
 
@@ -313,9 +314,9 @@ $(document).ready(function () {
     });
 
     channel.bind('Message', function(data) {
-        my_id = messanger.getCookie('id');
-        mainBlock = $('#mainBlock');
-        if(data.id_from === my_id){
+        let my_id = messanger.getCookie('id');
+        let mainBlock = $('#mainBlock');
+        if(data['id_from'] === my_id){
            messanger.showSentMessage(data);
         }
         else {
@@ -326,12 +327,12 @@ $(document).ready(function () {
 
     channel.bind('checkNewMessages',function (data) {
         messanger.checkNewMessages(data);
-    })
+    });
 
-    $(document).on('click','div.message-input input#content', function (ev) {
+    $(document).on('click','div.message-input input#content', function () {
         messanger.checkAndSetAllSeen();
     })
 
 
-})
+});
 

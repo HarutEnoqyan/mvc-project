@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var input_id = '',
+    let input_id = '',
         comment = '',
         post_id = 0;
     $(document).on('click','.ajax_button', function () {
@@ -46,10 +46,11 @@ $(document).ready(function () {
 
     });
 
-    $(document).on('click','.ajax_reply_button', function (event) {
-        input_id = $(this).attr('data-id');
-        comment_id = $(this).attr('data-comment-id');
-        comment = $('input#'+input_id).val();
+    $(document).on('click','.ajax_reply_button', function () {
+        let input_id = $(this).attr('data-id');
+        let comment_id = $(this).attr('data-comment-id');
+        let input = $('input#'+input_id);
+        let comment = input.val();
 
         $.ajax({
 
@@ -64,15 +65,15 @@ $(document).ready(function () {
 
         });
 
-        $('input#'+input_id).val('');
+        input.val('');
 
 
     });
 
     $(document).on('keydown','.ajax_reply_input', function (event) {
         if (event.keyCode===13){
-            comment_id = $(this).attr('data-comment-id');
-            comment = $(this).val();
+            let comment_id = $(this).attr('data-comment-id');
+            let comment = $(this).val();
 
             $.ajax({
 
@@ -94,15 +95,16 @@ $(document).ready(function () {
 
 
     function getVal(id) {
-        comment = $('input#' + id).val();
-        $('input#' + id).val('');
+        let input = $('input#' + id);
+        comment = input.val();
+        input.val('');
 
     }
 
     //................
     //image upload
 
-    var upload = {
+    let upload = {
         fileNames : [],
         namesInput : '',
         imagesInput : document.getElementById("imgInp"),
@@ -113,9 +115,9 @@ $(document).ready(function () {
 
 
         getFileNames : function (input) {
-            file = this.imagesInput.files;
+            let file = this.imagesInput.files;
 
-            for (var i = 0; i<file.length; i++){
+            for (let i = 0; i<file.length; i++){
                 if ($.inArray(file[i] , this.files) === -1){
                     this.files.push(file[i]);
                 }
@@ -131,13 +133,13 @@ $(document).ready(function () {
 
         readURL : function (input) {
             if (input.files) {
-                var div =  $('div.upload-image-group');
+                let div =  $('div.upload-image-group');
                 $.each(input.files, function (key, val) {
 
-                    var file = val;
-                    var reader = new FileReader();
-                    name = file['name'];
-                    id = file['lastModified'];
+                    let file = val;
+                    let reader = new FileReader();
+                    let name = file['name'];
+                    let id = file['lastModified'];
                     reader.readAsDataURL(val);
                     reader.onload = function (e) {
                         upload.btn = "<span data-name='"+file['name']+"' class='btn  btn-danger image_remove absolute' data-id='"+file['lastModified']+"'>x<span> ";
@@ -150,9 +152,9 @@ $(document).ready(function () {
         },
 
         removeIMG : function (data) {
-            var name = data.attr('data-name');
+            let name = data.attr('data-name');
             data.parent('div').remove();
-            for (var i = 0; i < this.fileNames.length ; i++) {
+            for (let i = 0; i < this.fileNames.length ; i++) {
                 if (this.fileNames[i] === name){
                     this.fileNames.splice(i,1);
                 }
@@ -164,11 +166,11 @@ $(document).ready(function () {
         },
 
         initFileList : function () {
-            for (var i = 0 ; i < this.files.length ; i ++) {
+            for (let i = 0 ; i < this.files.length ; i ++) {
                 this.formData.append('images[]', this.files[i]);
             }
 
-            // for (var pair of upload.formData.entries()) {
+            // for (let pair of upload.formData.entries()) {
             //     console.log(pair[0]+ ', ' + pair[1]);
             // }
         }
@@ -180,7 +182,7 @@ $(document).ready(function () {
 
 
     $(document).on('change', '.btn-file :file', function() {
-        var input = $(this);
+        let input = $(this);
         upload.getFileNames(input);
 
     });
@@ -194,18 +196,18 @@ $(document).ready(function () {
         }
     });
 
-    $("#imgInp").change(function(){
+    $("#imgInp").on('change', function(){
         upload.readURL(this);
     });
     $(document).on('click','span.image_remove', function () {
-        var btn = $(this);
+        let btn = $(this);
         upload.removeIMG(btn);
-    })
+    });
 
 
 
     $(document).on('click','#post-create-btn', function () {
-        var  title = $('#title').val(),
+        let  title = $('#title').val(),
             content= $('#content').val();
         upload.initFileList();
         upload.formData.append('title' , title);
@@ -222,8 +224,8 @@ $(document).ready(function () {
                 result = JSON.parse(result);
                 $('.error-message').remove();
                 $('.is-invalid').removeClass('is-invalid');
-                if (result.errors) {
-                    $.each(result.errors, function (key, value) {
+                if (result['errors']) {
+                    $.each(result['errors'], function (key, value) {
                         $('input[name="'+key+'"]').after('<span class="text-danger error-message">'+value+'</span>').addClass('is-invalid');
                         $('textarea[name="'+key+'"]').after('<span class="text-danger error-message">'+value+'</span>').addClass('is-invalid');
                     })
@@ -240,7 +242,7 @@ $(document).ready(function () {
     //image upload end
 
     $(document).on('click','#post-edit-btn', function () {
-        id = $(this).attr('data-id');
+        let id = $(this).attr('data-id');
         upload.formData.append('id' , id);
         upload.initFileList();
 
@@ -252,7 +254,7 @@ $(document).ready(function () {
             data: upload.formData,
             processData: false,
             contentType: false,
-            success: function(result){
+            success: function(){
                     window.location.href = '?route=post/index';
             }
 
