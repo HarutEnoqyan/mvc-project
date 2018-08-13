@@ -12,5 +12,5 @@ if (isset($_SESSION['avatar'])){
 
 
 
-<h1><img id="welcome-profile-pic" src="<?=$avatar===null?'images/default-profile.jpg':'images/uploads/'.$avatar?>" alt=""> Wellcome <?= $_SESSION['name'] ?></h1>
+<h1><img id="welcome-profile-pic" src="<?=$avatar===null?'/images/default-profile.jpg':'/images/uploads/'.$avatar?>" alt=""> Wellcome <?= $_SESSION['name'] ?></h1>
 

@@ -17,7 +17,7 @@
     <div class="col-sm-3 mt-3">
         <div class="card">
             <canvas class="header-bg" width="250" height="70" id="header-blur"></canvas>
-            <img class="src-image"  src = '<?=$avatar===null || $avatar==""?'images/default-profile.jpg':'images/uploads/'.$avatar?>' >
+            <img class="src-image"  src = '<?=$avatar===null || $avatar==""?'/images/default-profile.jpg':'/images/uploads/'.$avatar?>' >
             <div class="modal fade" id="myModal<?=$user['id']?>" role="dialog">
                 <div class="modal-dialog">
 
@@ -33,7 +33,7 @@
                                     <div class="profile-sidebar text-center">
                                         <!-- SIDEBAR USERPIC -->
                                         <div class="profile-userpic">
-                                            <img src="<?=$avatar===null || $avatar==""?'images/default-profile.jpg':'images/uploads/'.$avatar?>" class="img-responsive" alt="">
+                                            <img src="<?=$avatar===null || $avatar==""?'/images/default-profile.jpg':'/images/uploads/'.$avatar?>" class="img-responsive" alt="">
                                         </div>
                                         <!-- END SIDEBAR USERPIC -->
                                         <!-- SIDEBAR USER TITLE -->

@@ -7,9 +7,14 @@ $(document).ready(function () {
     });
     let channel = pusher.subscribe('chat-room');
     let messanger;
+
+
     messanger = {
         partner_id: '',
         $seen:'',
+        prevTimeout : 0,
+
+
         /*
          * generating Messenger Block
          */
@@ -75,14 +80,13 @@ $(document).ready(function () {
                                 div.append(span).append(img).append($p);
                                 mainBlock.append(div);
                                 mainBlock.find('.showIfSeen').remove();
-                                if (parseInt($data.seen) === 0) {
+                                if (parseInt($data['seen']) === 0) {
                                     mainBlock.append('<span class="showIfSeen">seen</span>')
                                 }
                             }
                         }
                     });
 
-                    mainBlock.append('<img src="images/typing.gif" id="typing-gif" alt="" class="absolute">')
                     mainDiv.html(mainBlock);
 
                     let height = document.getElementById("mainBlock").scrollHeight;
@@ -155,9 +159,9 @@ $(document).ready(function () {
                 div = $('<div class="col-md-12 text-right"></div>');
                 imagePath = data['avatar'];
                 if (imagePath === 'default-profile.jpg') {
-                    img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                    img = $('<div class = "m-avatar"><img src="/images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 } else {
-                    img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                    img = $('<div class = "m-avatar"><img src="/images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 }
                 span = $('<span class="my-message bg-primary text-light p-1"><xmp>' + data['message'] + '</xmp></span>');
                 $p = $('<p class="created-at"><small>' + data['created_at'] + '</small></p>');
@@ -182,9 +186,9 @@ $(document).ready(function () {
                 div = $('<div class="col-md-12"></div>');
                 imagePath = data['avatar'];
                 if (imagePath === 'default-profile.jpg') {
-                    img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                    img = $('<div class = "m-avatar"><img src="/images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 } else {
-                    img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                    img = $('<div class = "m-avatar"><img src="/images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 }
                 span = $('<span class="recived-message bg-primary text-light p-1"><xmp>' + data.message + '</xmp></span>');
                 $p = $('<p class="created-at"><small>' + data['created_at'] + '</small></p>');
@@ -196,7 +200,6 @@ $(document).ready(function () {
                 }
                 mainBlock.append(div);
 
-            this.notify();
         },
 
         /*
@@ -289,8 +292,35 @@ $(document).ready(function () {
         //     document.cookie = cname + "=" + cvalue + ";";
         // }
 
+        hideTypingAnimation : function () {
+            if (this.prevTimeout) {
+                window.clearTimeout(this.prevTimeout);
+            }
+            this.prevTimeout = window.setTimeout(function () {
+                $('.messages').find('#typing-gif').remove();
+
+            }, 5000);
+        },
+
+        typing : function (data) {
+            if(data===messanger.partner_id){
+                $('.messages').find('#typing-gif').remove();
+                let gif = $('<img src="/images/typing.gif" id="typing-gif" alt="">');
+                $('#mainBlock').append(gif);
+                this.hideTypingAnimation();
+            }
+
+            let block = document.getElementById("mainBlock");
+            if (block !== null) {
+                let height = document.getElementById("mainBlock").scrollHeight;
+                $('#mainBlock').animate({scrollTop: height}, 500);
+            }
+        }
+
 
     };
+
+    console.log(messanger.getCookie("my_id"))
 
     //language=JQuery-CSS
     $('.messenger-item').click(function () {
@@ -331,36 +361,19 @@ $(document).ready(function () {
         messanger.checkAndSetAllSeen();
     });
 
-    let prevTimeout;
-    hideTypingAnimation = function() {
-        if (prevTimeout) {
-            window.clearTimeout(prevTimeout);
-        }
-        prevTimeout = window.setTimeout(function () {
-            $('img#typing-gif').hide();
-        },5000);
-    };
 
     channel.bind('isTyping',function (data) {
-
-        if(data===messanger.partner_id){
-            $('img#typing-gif').show();
-            hideTypingAnimation();
-        }
-
-        let block = document.getElementById("mainBlock");
-        if (block !== null) {
-            height = document.getElementById("mainBlock").scrollHeight;
-            $('#mainBlock').animate({scrollTop: height}, 500);
-        }
+        messanger.typing(data);
     });
+
+
     let typing = false;
     $(document).on('keydown','div.message-input input#content', function () {
         if(typing===false) {
             typing=true;
             $.ajax({
                 method: "POST",
-                url: '?route=message/isTyping',
+                url: '/message/isTyping',
                 data: {'id':messanger.getCookie('id')},
                 success: function (data) {
                 },
@@ -374,9 +387,4 @@ $(document).ready(function () {
         },5000)
 
     });
-
-
-
-
 });
-

@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="col-md-12"><h2><?=$post['post_title'] ?></h2></div>
                 <?php foreach ($post['post_thumbnail'] as $image) {?>
-                    <img class="ml-3 thumbnail relative" src="<?=$image=== null || $image=='' ? 'images/blog-default.png' : 'images/uploads/'.$image?>" alt="blog-default">
+                    <img class="ml-3 thumbnail relative" src="<?=$image=== null || $image=='' ? '/images/blog-default.png' : '/images/uploads/'.$image?>" alt="blog-default">
                 <?php }
 
                 if ($post['post_user_id']==\Core\Auth::getId()){?>
@@ -74,7 +74,7 @@
                     <p><?=$post['post_content'] ?></p>
                 </div>
                 <div class="col-md-12">
-                    <div class="p-0 mb-0">Author : <img class="profile-pic" src="<?=$post['post_author_avatar']===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$post['post_author_avatar']?>" alt="profile-edfault">  <?=$post['post_author']?> </div>
+                    <div class="p-0 mb-0">Author : <img class="profile-pic" src="<?=$post['post_author_avatar']===NULL ? '/images/default-profile.jpg' : '/images/uploads/'.$post['post_author_avatar']?>" alt="profile-edfault">  <?=$post['post_author']?> </div>
                     <p class="p-0 mb-0"><small>Created at: <?=$post['post_created_at'] ?></small></p>
                     <?php
                     if (isset($post['post_updated_at'])){
@@ -99,7 +99,7 @@
                                 <div class='media'>
                                     <div class='media-body'>
                                         <div>
-                                            <img src="<?=$comment['comment_author_avatar']===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$comment['comment_author_avatar']?>"  alt="default-profile" class="comment-author-pic">
+                                            <img src="<?=$comment['comment_author_avatar']===NULL ? '/images/default-profile.jpg' : '/images/uploads/'.$comment['comment_author_avatar']?>"  alt="default-profile" class="comment-author-pic">
                                             <h6 class='media-heading user_name'><?= $comment['comment_author']?></h6>
                                         </div>
                                         <small class='float-right'><?= $comment['comment_date']?></small>
@@ -108,7 +108,7 @@
                                             <div class="replyes row ml-3 mr-3" id="rep<?=$comment['comment_id']?>">
                                                 <?php foreach ($comment['replyes'] as $reply) { ?>
                                                     <div class="border pt-2 reply-content mt-2 col-md-11">
-                                                        <p><img src="<?=$reply['reply_author_avatar']===NULL ? 'images/default-profile.jpg' : 'images/uploads/'.$reply['reply_author_avatar']?>" alt="default-profile" class="reply-author-pic mr-2"> <?=$reply['reply_author']?></p>
+                                                        <p><img src="<?=$reply['reply_author_avatar']===NULL ? '/images/default-profile.jpg' : '/images/uploads/'.$reply['reply_author_avatar']?>" alt="default-profile" class="reply-author-pic mr-2"> <?=$reply['reply_author']?></p>
                                                         <?=$reply['reply_content'] ?>
                                                         <small class="float-right"><?=$reply['reply_created_at'] ?></small>
                                                     </div>

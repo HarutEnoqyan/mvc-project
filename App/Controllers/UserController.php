@@ -165,7 +165,7 @@ class UserController
                 $_SESSION['id']=$userId;
                 $_SESSION['name']=$userName;
                 $_SESSION['avatar']=$avatar;
-                setcookie("id", $userId);
+                setcookie("my_id", $userId);
                 $this->updateToken($userId,$token);
                 redirect(route('user/index' ));
             } else {

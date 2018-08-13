@@ -1,5 +1,4 @@
-<div class="row
-">
+<div class="row">
     <div class="col-md-3 ml-3 mr-1  border">
         <?php
         /** @var  $params */
@@ -7,7 +6,7 @@
         <div class='col-md-12 messenger-item border  ' data-id="<?=$key?>">
             <div class="row">
                 <div class="col-lg-4 col-md-6 messenger-item-avatar mt-1">
-                    <img src="<?=$conn['avatar']!=="" && $conn['avatar']!==null? IMAGE_PATH."/".$conn['avatar']: "images/default-profile.jpg"?>" alt="">
+                    <img src="<?=$conn['avatar']!=="" && $conn['avatar']!==null? IMAGE_PATH."/".$conn['avatar']: "/images/default-profile.jpg"?>" alt="">
                 </div>
                 <div class="col-lg-8 col-md-12">
                     <p class="name"><?=$conn['name']?></p>
