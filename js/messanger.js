@@ -320,7 +320,6 @@ $(document).ready(function () {
 
     };
 
-    console.log(messanger.getCookie("my_id"))
 
     //language=JQuery-CSS
     $('.messenger-item').click(function () {
@@ -339,16 +338,21 @@ $(document).ready(function () {
     });
 
     channel.bind('Message', function(data) {
-        let my_id = messanger.getCookie('id');
+        let my_id = messanger.getCookie('my_id');
         let mainBlock = $('#mainBlock');
 
         if(data['id_from'] === my_id){
-           messanger.showSentMessage(data);
+            $('.messages').find('#typing-gif').remove();
+
+            messanger.showSentMessage(data);
         }
         else {
+            $('.messages').find('#typing-gif').remove();
+
             if (data['id_from'] === messanger.partner_id && data['id_to'] === my_id) {
                 messanger.showReceivedMessage(data)
             }
+            messanger.notify();
         }
     });
 
@@ -373,8 +377,8 @@ $(document).ready(function () {
             typing=true;
             $.ajax({
                 method: "POST",
-                url: '/message/isTyping',
-                data: {'id':messanger.getCookie('id')},
+                url: '?route=message/isTyping',
+                data: {'id':messanger.getCookie('my_id')},
                 success: function (data) {
                 },
                 error: function () {
