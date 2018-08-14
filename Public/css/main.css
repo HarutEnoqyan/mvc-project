@@ -384,3 +384,7 @@ div.card .modal .profile-userpic img {
     display: block;
     margin-bottom: 10px;
 }
+
+.messages img#loader {
+    width: 100%;
+}

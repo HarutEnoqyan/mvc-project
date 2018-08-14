@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-3 ml-3 mr-1  border">
+    <div class="col-md-3 ml-3 mr-1 border" id="messanger-partners">
         <?php
         /** @var  $params */
         foreach($params as $key=> $conn) {?>
@@ -18,7 +18,7 @@
     <div class="col-md-8 border bg-light relative">
 
             <div class="messages mt-3  pt-2 relative">
-
+                <img id="loader" src="/images/loading-spinner-gif-11.gif">
             </div>
 
         <div class="row col-md-12 message-input">

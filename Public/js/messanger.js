@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    window.setTimeout(function () {
+        $('#messanger-partners div.messenger-item:first-child').trigger('click');
+    },500);
     Pusher.logToConsole = false;
 
     let pusher = new Pusher('9d329e4ffa4a8363a7d5', {
@@ -274,7 +277,7 @@ $(document).ready(function () {
         getMyId: function () {
             $.ajax({
                 method: "POST",
-                url: '/user/takeId',
+                url: '/user/TakeId',
                 success: function (data) {
                     messanger.myID = data;
                 },
@@ -316,6 +319,8 @@ $(document).ready(function () {
 
 
     };
+
+
 
 
     $('.messenger-item').on('click',function () {

@@ -39,18 +39,21 @@ class checkRoute
             'message/checkIfSeen',
             'message/SentMessage',
             'message/isTyping',
-            '/user/takeId'
+            'user/TakeId'
 
         );
 
-        if (!Auth::checkIfAuth() && isset($_REQUEST['route']) ){
-            if (!in_array($_REQUEST['route'], $publicLinks)){
+
+        if (!Auth::checkIfAuth() && $_SERVER['REQUEST_URI']){
+            $route = substr(explode('?' ,$_SERVER['REQUEST_URI'])[0], 1);
+            if (!in_array($route, $publicLinks)){
                 return false;
             }
         }
 
-        if (Auth::checkIfAuth() && isset($_REQUEST['route'])){
-            if (!in_array($_REQUEST['route'], $authList)){
+        if (Auth::checkIfAuth() && $_SERVER['REQUEST_URI']){
+            $route = substr(explode('?' ,$_SERVER['REQUEST_URI'])[0], 1);
+            if (!in_array($route, $authList)){
                 return false;
             }else{
                 return true;

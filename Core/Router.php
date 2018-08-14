@@ -7,14 +7,15 @@ class Router {
     public static function init()
     {
         $route = 'main/index';
-        if ($_SERVER['REQUEST_URI'] && substr(explode('?' ,$_SERVER['REQUEST_URI'])[0], 1) !="") {
-            $route = substr(explode('?' ,$_SERVER['REQUEST_URI'])[0], 1);
-//            dd($route);
-        }
 
         if (checking::check()===false) {
             redirect(route('main/errorPage'));
         }
+
+        if ($_SERVER['REQUEST_URI'] && substr(explode('?' ,$_SERVER['REQUEST_URI'])[0], 1) !="") {
+            $route = substr(explode('?' ,$_SERVER['REQUEST_URI'])[0], 1);
+        }
+
 
         $controllerAction = explode('/', $route);
         if (count($controllerAction) === 2) {
