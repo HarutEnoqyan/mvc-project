@@ -41,7 +41,7 @@ $(document).ready(function () {
                     let mainBlock = $('<div  id="mainBlock"></div>') , mainDiv =  $('div.messages');
 
                     $.each($data, function (index, value) {
-                        if(index!=='seen'){
+                        if( 'seen' !== index  ){
                             let sent_by = value['sent_by'];
                             $('input.send_message').attr('data-id', value.partner_id);
                             $('input[name="message_text"]').attr('data-id', value.partner_id);
@@ -87,6 +87,7 @@ $(document).ready(function () {
                         }
                     });
 
+                    // noinspection JSCheckFunctionSignatures
                     mainDiv.html(mainBlock);
 
                     let height = document.getElementById("mainBlock").scrollHeight;
@@ -321,8 +322,7 @@ $(document).ready(function () {
     };
 
 
-    //language=JQuery-CSS
-    $('.messenger-item').click(function () {
+    $('.messenger-item').on('click',function () {
        messanger.generateMessangerBlock(this);
     });
 
@@ -339,7 +339,7 @@ $(document).ready(function () {
 
     channel.bind('Message', function(data) {
         let my_id = messanger.getCookie('my_id');
-        let mainBlock = $('#mainBlock');
+        // let mainBlock = $('#mainBlock');
 
         if(data['id_from'] === my_id){
             $('.messages').find('#typing-gif').remove();
