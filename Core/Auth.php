@@ -24,6 +24,7 @@ class Auth {
 
     public static function logOut()
     {
+        unset($_COOKIE['my_id']);
         session_start();
         session_destroy();
         session_abort();

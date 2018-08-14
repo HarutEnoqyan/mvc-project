@@ -38,7 +38,8 @@ class checkRoute
             'message/setAllSeen',
             'message/checkIfSeen',
             'message/SentMessage',
-            'message/isTyping'
+            'message/isTyping',
+            '/user/takeId'
 
         );
 

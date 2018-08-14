@@ -13,6 +13,7 @@ $(document).ready(function () {
         partner_id: '',
         $seen:'',
         prevTimeout : 0,
+        myID:0,
 
 
         /*
@@ -20,7 +21,7 @@ $(document).ready(function () {
          */
         generateMessangerBlock: function (event) {
             this.partner_id = $(event).attr('data-id');
-
+            this.getMyId();
             $(event).parent('div').find('div.row').css('background', '#f5f1e8');
 
             //noinspection JSValidateTypes
@@ -33,7 +34,7 @@ $(document).ready(function () {
             };
 
             $.ajax({
-                url: "?route=message/ShowMessages",
+                url: "/message/ShowMessages",
                 type: 'GET',
                 data: $data,
                 success: function (result) {
@@ -54,10 +55,10 @@ $(document).ready(function () {
                                 div = $('<div class="col-md-12 "></div>');
                                 imagePath = value['partner_avatar'];
                                 if (imagePath !== '') {
-                                    img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                    img = $('<div class = "m-avatar"><img src="/images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                                 } else {
                                     imagePath = 'default-profile.jpg';
-                                    img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                    img = $('<div class = "m-avatar"><img src="/images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                                 }
                                 span = $('<span class="recived-message bg-primary text-light p-1"><xmp>' + value.message + '</xmp></span>');
                                 $p = $('<p class="created-at"><small>' + value['created_at'] + '</small></p>');
@@ -70,9 +71,9 @@ $(document).ready(function () {
 
                                 if (imagePath === '') {
                                     imagePath = 'default-profile.jpg';
-                                    img = $('<div class = "m-avatar"><img src="images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                    img = $('<div class = "m-avatar"><img src="/images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                                 } else {
-                                    img = $('<div class = "m-avatar"><img src="images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                                    img = $('<div class = "m-avatar"><img src="/images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                                 }
 
                                 span = $('<span class="my-message bg-primary text-light p-1"><xmp>' + value['message'] + '</xmp></span>');
@@ -112,7 +113,7 @@ $(document).ready(function () {
                 };
                 $.ajax({
                     method: "POST",
-                    url: '?route=message/send',
+                    url: '/message/send',
                     data: data,
                     success: function (data) {
                     },
@@ -139,7 +140,7 @@ $(document).ready(function () {
                 };
                 $.ajax({
                     method: "POST",
-                    url: '?route=message/send',
+                    url: '/message/send',
                     data: data,
                     success: function () {
                     },
@@ -160,7 +161,7 @@ $(document).ready(function () {
                 div = $('<div class="col-md-12 text-right"></div>');
                 imagePath = data['avatar'];
                 if (imagePath === 'default-profile.jpg') {
-                    img = $('<div class = "m-avatar"><img src="/images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                    img = $('<div class = "m-avatar"><img src="/images/ ' + imagePath + ' " alt="" class="message-author-avatar"></div>')
                 } else {
                     img = $('<div class = "m-avatar"><img src="/images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 }
@@ -189,7 +190,7 @@ $(document).ready(function () {
                 if (imagePath === 'default-profile.jpg') {
                     img = $('<div class = "m-avatar"><img src="/images/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 } else {
-                    img = $('<div class = "m-avatar"><img src="/images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
+                    img = $('<div class = "m-avatar"><img src= "/images/uploads/' + imagePath + '" alt="" class="message-author-avatar"></div>')
                 }
                 span = $('<span class="recived-message bg-primary text-light p-1"><xmp>' + data.message + '</xmp></span>');
                 $p = $('<p class="created-at"><small>' + data['created_at'] + '</small></p>');
@@ -208,7 +209,7 @@ $(document).ready(function () {
          */
         checkNewMessages: function (data) {
             let height;
-            if (data['id']===messanger.partner_id && data['partner_id']===messanger.getCookie('id')) {
+            if (data['id']===messanger.partner_id && data['partner_id']===messanger.myID) {
                 $('.messages').find('div#mainBlock:last-child span.showIfSeen').html('seen');
             }
 
@@ -226,7 +227,7 @@ $(document).ready(function () {
         notify: function () {
             $.ajax({
                 method: "POST",
-                url: '?route=message/check',
+                url: '/message/check',
                 success: function (data) {
                     if (data && data > 0) {
                         $("#messangerLink").find("span").css('display', 'block').html(data);
@@ -244,7 +245,7 @@ $(document).ready(function () {
         checkAndSetAllSeen: function () {
             $.ajax({
                 method: "POST",
-                url: '?route=message/checkIfSeen',
+                url: '/message/checkIfSeen',
                 data: {'partner_id' : messanger.partner_id},
                 success: function (data) {
 
@@ -257,7 +258,7 @@ $(document).ready(function () {
 
             $.ajax({
                 method: "POST",
-                url: '?route=message/setAllSeen',
+                url: '/message/setAllSeen',
                 success: function () {
                     $('#messangerLink').find('span').css('display', 'none').html("");
                 },
@@ -268,30 +269,24 @@ $(document).ready(function () {
 
 
         /*
-         * geting data from cookie
+         * getiId
          */
-        getCookie: function (cname) {
-            let name = cname + "=";
-            let decodedCookie = decodeURIComponent(document.cookie);
-            let ca = decodedCookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1);
+        getMyId: function () {
+            $.ajax({
+                method: "POST",
+                url: '/user/takeId',
+                success: function (data) {
+                    messanger.myID = data;
+                },
+                error: function () {
                 }
-                if (c.indexOf(name) === 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
+            })
         },
 
-        /*
-         * for seting data in cookie
+        /**
+         * hide typing animation
          */
-        // setCookie: function (cname, cvalue) {
-        //     document.cookie = cname + "=" + cvalue + ";";
-        // }
+
 
         hideTypingAnimation : function () {
             if (this.prevTimeout) {
@@ -304,7 +299,8 @@ $(document).ready(function () {
         },
 
         typing : function (data) {
-            if(data===messanger.partner_id){
+            if (data !== messanger.partner_id) {
+            } else {
                 $('.messages').find('#typing-gif').remove();
                 let gif = $('<img src="/images/typing.gif" id="typing-gif" alt="">');
                 $('#mainBlock').append(gif);
@@ -338,10 +334,9 @@ $(document).ready(function () {
     });
 
     channel.bind('Message', function(data) {
-        let my_id = messanger.getCookie('my_id');
-        // let mainBlock = $('#mainBlock');
 
-        if(data['id_from'] === my_id){
+
+        if(data['id_from'] === messanger.myID){
             $('.messages').find('#typing-gif').remove();
 
             messanger.showSentMessage(data);
@@ -349,7 +344,7 @@ $(document).ready(function () {
         else {
             $('.messages').find('#typing-gif').remove();
 
-            if (data['id_from'] === messanger.partner_id && data['id_to'] === my_id) {
+            if (data['id_from'] === messanger.partner_id && data['id_to'] === messanger.myID) {
                 messanger.showReceivedMessage(data)
             }
             messanger.notify();
@@ -377,8 +372,8 @@ $(document).ready(function () {
             typing=true;
             $.ajax({
                 method: "POST",
-                url: '?route=message/isTyping',
-                data: {'id':messanger.getCookie('my_id')},
+                url: '/message/isTyping',
+                data: {'id':messanger.myID},
                 success: function (data) {
                 },
                 error: function () {

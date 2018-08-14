@@ -33,7 +33,7 @@ function query($sql, $params = [])
 function route($route, array $params = [])
 {
     $q = http_build_query($params);
-    return "/?route=$route" . ($q ? "&$q" : '');
+    return "/$route" . ($q ? "?$q" : '');
 }
 
 function redirect($to)

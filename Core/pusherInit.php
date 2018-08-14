@@ -7,6 +7,9 @@ abstract class pusherInit
     protected abstract function getEvent();
     protected abstract function getData();
 
+    /**
+     * @throws Pusher\PusherException
+     */
     protected function init(){
         $options = array(
             'cluster' => 'eu',

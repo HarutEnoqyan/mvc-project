@@ -165,7 +165,6 @@ class UserController
                 $_SESSION['id']=$userId;
                 $_SESSION['name']=$userName;
                 $_SESSION['avatar']=$avatar;
-                setcookie("my_id", $userId);
                 $this->updateToken($userId,$token);
                 redirect(route('user/index' ));
             } else {
@@ -191,6 +190,7 @@ class UserController
 
     public function actionLogout()
     {
+
         Auth::logOut();
         redirect(route('main/index'));
     }
@@ -205,9 +205,9 @@ class UserController
         view('user/show' , $data);
     }
 
-    public function actionShowProfile()
+    public function actionTakeId()
     {
-
+        echo Auth::getId();
     }
 
 }
